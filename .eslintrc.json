@@ -1,38 +1,44 @@
 {
-  "env": {
-    "browser": true,
-    "es2021": true
-  },
-  "extends": ["plugin:react/recommended", "airbnb", "prettier"],
   "parserOptions": {
+    "project": "./tsconfig.json",
     "ecmaFeatures": {
       "jsx": true
     },
     "ecmaVersion": 12,
     "sourceType": "module"
   },
-  "plugins": ["react", "prettier"],
+  "parser": "@typescript-eslint/parser",
+  "extends": [
+    "plugin:react/recommended",
+    "airbnb",
+    "airbnb-typescript",
+    "prettier",
+    "next"
+  ],
+  "plugins": ["react", "@typescript-eslint", "prettier", "typescript"],
   "rules": {
     "no-restricted-imports": [
-      "error",
+      "warn",
       {
         "patterns": [".*"]
       }
     ],
     "prefer-destructuring": "warn",
-    "react/jsx-filename-extension": [1, { "extensions": [".jsx", ".js"] }],
+    "react/jsx-filename-extension": [1, { "extensions": [".tsx", ".ts"] }],
     "react/prop-types": "off",
     "react/react-in-jsx-scope": "off",
     "react/require-default-props": "off",
     "no-use-before-define": "off",
-    "import/no-unresolved": "off",
-    "camelcase": "off",
-    "no-underscore-dangle": "off",
-    "react/jsx-props-no-spreading": "off",
-    "import/prefer-default-export": "off",
     "arrow-body-style": "warn",
+    "no-underscore-dangle": "off",
+    "import/prefer-default-export": "off",
     "no-nested-ternary": "warn",
-    "react/function-component-definition": "off",
+    "import/no-unresolved": "off",
+    "react/jsx-props-no-spreading": "off",
+    "@typescript-eslint/no-use-before-define": "off",
+    "@typescript-eslint/naming-convention": "error",
+    "@typescript-eslint/return-await": "off",
+    "react/jsx-no-useless-fragment": "off",
     "prettier/prettier": [
       "error",
       {
@@ -47,6 +53,7 @@
         "specialLink": ["hrefLeft", "hrefRight"],
         "aspects": ["invalidHref", "preferButton"]
       }
-    ]
+    ],
+    "react/function-component-definition": "off"
   }
 }
