@@ -1,0 +1,183 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Enum_RoleName {
+  Admin
+  Candidate
+}
+
+enum Enum_StatusInterview {
+  Completed
+  NotCompleted
+}
+
+enum Enum_StatusAdmissionProcess {
+  Interview_Phase
+  Hiring_Phase
+  Discarded
+}
+
+enum Enum_DocumentType {
+  Company
+  Candidate
+}
+
+model Account {
+  id                String   @id @default(cuid())
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?  @db.Text
+  access_token      String?  @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?  @db.Text
+  session_state     String?
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId            String
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  @@unique([provider, providerAccountId])
+}
+
+// Analizar si quitar customImage (el profesor la emplea)
+model Profile {
+  id             String   @id @default(cuid())
+  phone          String?
+  identification String?  @unique
+  address        String?
+  customImage    String?
+  user           User     @relation(fields: [userId], references: [id])
+  userId         String   @unique
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model User {
+  id                  String             @id @default(cuid())
+  email               String?            @unique
+  name                String?
+  image               String?
+  emailVerified       DateTime?
+  profile             Profile?
+  role                Role?              @relation(fields: [roleId], references: [id])
+  roleId              String?
+  moderatedInterviews Interview[]
+  admissionProcesess  AdmissionProcess[]
+  accounts            Account[]
+  sessions            Session[]
+  createdAt           DateTime           @default(now())
+  updatedAt           DateTime           @updatedAt
+}
+
+model AdmissionProcess {
+  id                  String                      @id @default(cuid())
+  vacancy             Vacancy?                    @relation(fields: [vacancyId], references: [id])
+  vacancyId           String?
+  candidate           User?                       @relation(fields: [candidateId], references: [id])
+  candidateId         String?
+  status              Enum_StatusAdmissionProcess
+  interviews          Interview[]
+  uploadDocumentation UploadedDocument[]
+  createdAt           DateTime                    @default(now())
+  updatedAt           DateTime                    @updatedAt
+}
+
+model Document {
+  id                String             @id @default(cuid())
+  name              String?
+  description       String?
+  type              Enum_DocumentType?
+  signature         Boolean?
+  uploadedDocuments UploadedDocument[]
+  vacancies         Vacancy[]
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+}
+
+model UploadedDocument {
+  id                 String            @id @default(cuid())
+  admissionProcess   AdmissionProcess? @relation(fields: [admissionProcessId], references: [id])
+  admissionProcessId String?
+  document           Document?         @relation(fields: [documentId], references: [id])
+  documentId         String?
+  fileUrl            String?
+  createdAt          DateTime          @default(now())
+  updatedAt          DateTime          @updatedAt
+}
+
+model Interview {
+  id                 String               @id @default(cuid())
+  admissionProcess   AdmissionProcess?    @relation(fields: [admissionProcessId], references: [id])
+  admissionProcessId String?
+  interviewer        User?                @relation(fields: [interviewerId], references: [id])
+  interviewerId      String?
+  date               DateTime?
+  meetingDetail      String?
+  notes              String?
+  status             Enum_StatusInterview?
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt
+}
+
+model Vacancy {
+  id                 String             @id @default(cuid())
+  position           String?
+  candidatesQuantity Int?
+  admissionProcesess AdmissionProcess[]
+  description        String?
+  minimumSalary      String?
+  maximumSalary      String?
+  startDate          DateTime?
+  documents          Document[]
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+}
+
+model Page {
+  id        String   @id @default(cuid())
+  name      String
+  path      String   @unique
+  roles     Role[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Role {
+  id        String        @id @default(cuid())
+  name      Enum_RoleName @unique
+  users     User[]
+  pages     Page[]
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId       String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+// Queda pendiente verificar si será necesario, está en el repo del profe
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  @@unique([identifier, token])
+}
