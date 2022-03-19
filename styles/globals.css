@@ -18,3 +18,11 @@ a {
 * {
   box-sizing: border-box;
 }
+
+.active {
+  @apply text-white font-extrabold bg-blue-500 p-4 my-4 w-full rounded rounded-r-full
+}
+
+.linkNavigation {
+  @apply p-4 my-1 w-full rounded rounded-r-full text-2xl
+}

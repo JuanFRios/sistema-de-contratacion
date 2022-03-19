@@ -23,7 +23,7 @@ class MyDocument extends Document {
             rel='stylesheet'
           />
           <script
-            src='https://kit.fontawesome.com/433667d0d8.js'
+            src='https://kit.fontawesome.com/b020a3da99.js'
             crossOrigin='anonymous'
           />
         </Head>
