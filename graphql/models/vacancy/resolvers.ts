@@ -1,9 +1,5 @@
 // import prisma from 'config/prisma';
 
-const VacancyResolvers = {
-  Vacancy: {},
-  Query: {},
-  Mutation: {},
-};
+const VacancyResolvers = {};
 
 export { VacancyResolvers };

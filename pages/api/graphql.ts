@@ -4,7 +4,7 @@ import { ApolloServer } from 'apollo-server-micro';
 import Cors from 'micro-cors';
 import { types } from 'graphql/types';
 import { resolvers } from 'graphql/resolvers';
-import { getSession } from 'next-auth/react';
+// import { getSession } from 'next-auth/react';
 
 const cors = Cors({
   allowMethods: ['POST', 'OPTIONS', 'GET', 'HEAD'],
