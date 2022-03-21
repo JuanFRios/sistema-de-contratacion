@@ -1,10 +1,11 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable arrow-body-style */
 import prisma from 'config/prisma';
 
 const VacancyResolvers = {
   Vacancy: {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    documents: async (parent, args) =>
-      await prisma.document.findMany({
+    documents: async (parent, args) => {
+      return await prisma.document.findMany({
         where: {
           vacancies: {
             some: {
@@ -12,7 +13,8 @@ const VacancyResolvers = {
             },
           },
         },
-      }),
+      });
+    },
   },
   Query: {},
   Mutation: {
