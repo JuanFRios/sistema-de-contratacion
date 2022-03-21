@@ -3,7 +3,7 @@ import { gql } from 'apollo-server-micro';
 const RoleTypes = gql`
   enum Enum_RoleName {
     Admin
-    Dev
+    Candidate
   }
   type Role {
     id: ID

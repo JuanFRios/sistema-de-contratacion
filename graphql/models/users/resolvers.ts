@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import prisma from 'config/prisma';
 
 const UserResolvers = {
@@ -8,12 +9,12 @@ const UserResolvers = {
     //       userId: parent.id,
     //     },
     //   }),
-    // role: async (parent, args) =>
-    //   await prisma.role.findUnique({
-    //     where: {
-    //       id: parent.roleId,
-    //     },
-    //   }),
+    role: async (parent, args) =>
+      await prisma.role.findUnique({
+        where: {
+          id: parent.roleId,
+        },
+      }),
   },
   Query: {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -42,6 +43,12 @@ const UserResolvers = {
               provider: 'auth0',
               type: 'oauth',
               providerAccountId: args.data.auth0Id,
+            },
+          },
+          admissionProcesess: {
+            create: {
+              status: 'Interview_Phase',
+              vacancyId: args.data.vacancyId,
             },
           },
         },

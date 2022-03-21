@@ -24,6 +24,7 @@ const UserTypes = gql`
     image: String!
     auth0Id: String!
     role: String!
+    vacancyId: String!
   }
 
   type Mutation {
