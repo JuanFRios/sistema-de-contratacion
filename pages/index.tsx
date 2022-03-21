@@ -1,7 +1,15 @@
+import PrivateComponent from '@components/utils/PrivateComponent';
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import Image from 'next/image';
+import { matchRoles } from 'utils/matchRoles';
 import styles from '../styles/Home.module.css';
+
+export async function getServerSideProps(context) {
+  return {
+    props: { ...(await matchRoles(context)) },
+  };
+}
 
 const Home: NextPage = () => (
   <div className={styles.container}>
@@ -12,9 +20,11 @@ const Home: NextPage = () => (
     </Head>
 
     <main className={styles.main}>
-      <h1 className={styles.title}>
-        Welcome to <a href='https://nextjs.org'>Next.js!</a>
-      </h1>
+      <PrivateComponent roleList={['Candidate']}>
+        <h1 className={styles.title}>
+          Welcome to <a href='https://nextjs.org'>Next.js!</a>
+        </h1>
+      </PrivateComponent>
 
       <p className={styles.description}>
         Get started by editing{' '}
