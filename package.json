@@ -28,7 +28,8 @@
     "react-toastify": "^8.2.0",
     "reflect-metadata": "^0.1.13",
     "safe-json-stringify": "^1.2.0",
-    "ts-tiny-invariant": "^1.0.5"
+    "ts-tiny-invariant": "^1.0.5",
+    "axios": "^0.26.0"
   },
   "devDependencies": {
     "@types/node": "17.0.21",
