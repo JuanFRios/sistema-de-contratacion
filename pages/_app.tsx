@@ -8,6 +8,7 @@ import {
   ApolloProvider,
 } from '@apollo/client';
 import PrivateLayout from 'layout/PrivateLayout';
+import Head from 'next/head';
 
 const client = new ApolloClient({
   cache: new InMemoryCache(),
@@ -21,6 +22,9 @@ const client = new ApolloClient({
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <ApolloProvider client={client}>
+      <Head>
+        <title>Join us</title>
+      </Head>
       <PrivateLayout pageAuth={pageProps.auth}>
         {/* <PrivateLayout pageAuth={pageProps.auth}> */}
         <Component {...pageProps} />

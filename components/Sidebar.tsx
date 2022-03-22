@@ -4,13 +4,14 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
+import { adminMenuOptions } from 'utils/menu';
 
 const Sidebar = ({ child }: any) => {
   const [showResponsiveSidebar, setShowResponsiveSidebar] = useState(false);
   return (
     <div>
       <div className='md:hidden'>
-        <div className='absolute w-full h-20 top-0'>
+        <div className='absolute w-full h-20 top-0 z-10 bg-white'>
           <div className='flex justify-between'>
             <button
               className='p-2 '
@@ -19,7 +20,7 @@ const Sidebar = ({ child }: any) => {
                 setShowResponsiveSidebar(!showResponsiveSidebar);
               }}
             >
-              <i className='fas fa-bars' />
+              <i className='fas fa-bars text-4xl' />
             </button>
             <div className='pr-1 pt-1'>
               <img src='/logo-joinus.png' alt='Logo join us' />
@@ -27,33 +28,12 @@ const Sidebar = ({ child }: any) => {
           </div>
           {showResponsiveSidebar && (
             <nav className='flex items-center bg-indigo-700'>
-              <ul className='flex flex-col p-3'>
-                <LinkNavigation
-                  text='Vacantes'
-                  route='/'
-                  icon='fa-solid fa-table-list'
-                />
-                <LinkNavigation
-                  text='Entrevistas'
-                  route='/candidate/vacancies'
-                  icon='fa-solid fa-table-list'
-                />
-                <LinkNavigation
-                  text='Candidatos'
-                  route='/contacto'
-                  icon='fa-solid fa-table-list'
-                />
-                <LinkNavigation
-                  text='Documentos'
-                  route='/contacto'
-                  icon='fa-solid fa-file-lines'
-                />
-              </ul>
+              <MenuOptions />
             </nav>
           )}
         </div>
-        <div className='pt-20 w-full h-full'>
-          <div className='bg-green-600 w-full h-full overflow-auto'>
+        <div className='pt-20 w-full h-screen'>
+          <div className='bg-slate-100 w-full h-full overflow-auto'>
             {child}
           </div>
         </div>
@@ -90,28 +70,7 @@ const SidebarBig = ({ chil }: any) => (
           </div>
         </div>
       </div>
-      <ul className='flex flex-col w-full mt-6'>
-        <LinkNavigation
-          text='Vacantes'
-          route='/'
-          icon='fa-solid fa-table-list'
-        />
-        <LinkNavigation
-          text='Entrevistas'
-          route='/candidate/vacancies'
-          icon='fa-solid fa-video'
-        />
-        <LinkNavigation
-          text='Candidatos'
-          route='/admin/candidates'
-          icon='fa-solid fa-user-group'
-        />
-        <LinkNavigation
-          text='Documentos'
-          route='/contacto'
-          icon='fa-solid fa-folder-open'
-        />
-      </ul>
+      <MenuOptions />
     </nav>
     <div className='w-full absolute pl-72'>
       <div className='bg-white w-full h-20 flex justify-end border-b-2 '>
@@ -125,6 +84,17 @@ const SidebarBig = ({ chil }: any) => (
     </div>
   </div>
 );
+
+const MenuOptions = () => {
+  const menuItems = adminMenuOptions.map(({ text, route, icon }) => (
+    <LinkNavigation text={text} route={route} icon={icon} key={route} />
+  ));
+  return (
+    <ul className='flex flex-col sm:p-3 md:w-full md:mt-6 md:p-0'>
+      {menuItems}
+    </ul>
+  );
+};
 
 const LinkNavigation = ({ text, route, icon }) => {
   const router = useRouter();
