@@ -1,0 +1,21 @@
+import { gql } from 'apollo-server-micro';
+import { AdmissionProcessTypes } from 'graphql/models/admissionProcess/types';
+import { DocumentTypes } from 'graphql/models/document/types';
+import { RoleTypes } from 'graphql/models/role/types';
+import { UserTypes } from 'graphql/models/users/types';
+import { VacancyTypes } from 'graphql/models/vacancy/types';
+import { InterviewTypes } from 'graphql/models/interview/types';
+
+const genericTypes = gql`
+  scalar Date
+`;
+
+export const types = [
+  genericTypes,
+  DocumentTypes,
+  RoleTypes,
+  UserTypes,
+  AdmissionProcessTypes,
+  VacancyTypes,
+  InterviewTypes,
+];

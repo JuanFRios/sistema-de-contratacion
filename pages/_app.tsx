@@ -9,6 +9,7 @@ import {
 } from '@apollo/client';
 import PrivateLayout from 'layout/PrivateLayout';
 import Head from 'next/head';
+import { SessionProvider } from 'next-auth/react';
 
 const client = new ApolloClient({
   cache: new InMemoryCache(),
@@ -19,17 +20,18 @@ const client = new ApolloClient({
   ]),
 });
 
-function MyApp({ Component, pageProps }: AppProps) {
+function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   return (
-    <ApolloProvider client={client}>
-      <Head>
-        <title>Join us</title>
-      </Head>
-      <PrivateLayout pageAuth={pageProps.auth}>
-        {/* <PrivateLayout pageAuth={pageProps.auth}> */}
-        <Component {...pageProps} />
-      </PrivateLayout>
-    </ApolloProvider>
+    <SessionProvider session={session}>
+      <ApolloProvider client={client}>
+        <Head>
+          <title>Join us</title>
+        </Head>
+        <PrivateLayout pageAuth={pageProps.auth}>
+          <Component {...pageProps} />
+        </PrivateLayout>
+      </ApolloProvider>
+    </SessionProvider>
   );
 }
 
