@@ -53,7 +53,7 @@ const Sidebar = ({ child }: any) => {
           )}
         </div>
         <div className='pt-20 w-full h-full'>
-          <div className='bg-green-600 w-full h-full overflow-auto'>
+          <div className='bg-slate-100 w-full h-full overflow-auto'>
             {child}
           </div>
         </div>

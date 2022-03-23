@@ -1,4 +1,6 @@
 import React from 'react';
+import Link from 'next/link';
+
 // import useFormData from 'hooks/useFormData';
 
 // const interview = () => (
@@ -46,9 +48,11 @@ const interview = () => (
         placeholder='Notas...'
       />
     </div>
-    <div className='text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 max-w-min hover:cursor-pointer absolute bottom-10 right-10 m-4 '>
-      Guardar
-    </div>
+    <Link href='/admin/createInterview' passHref>
+      <div className='text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 max-w-min hover:cursor-pointer absolute bottom-10 right-10 m-4 '>
+        Guardar
+      </div>
+    </Link>
   </div>
 );
 
