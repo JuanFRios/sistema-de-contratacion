@@ -2,7 +2,8 @@ import { gql } from 'apollo-server-micro';
 
 const VacancyTypes = gql`
   type Query {
-    _dummy: String
+    getVacancies: [Vacancy]
+    getVacancy(id: String!): Vacancy
   }
 
   type Vacancy {
