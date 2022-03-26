@@ -4,7 +4,8 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
-import { adminMenuOptions } from 'utils/menu';
+import { adminMenuOptions, candidateMenuOptions } from 'utils/menu';
+import { signOut, useSession } from 'next-auth/react';
 
 const Sidebar = ({ child }: any) => {
   const [showResponsiveSidebar, setShowResponsiveSidebar] = useState(false);
@@ -27,7 +28,7 @@ const Sidebar = ({ child }: any) => {
             </div>
           </div>
           {showResponsiveSidebar && (
-            <nav className='flex items-center bg-indigo-700'>
+            <nav className='flex items-center bg-white border-y-2'>
               <MenuOptions />
             </nav>
           )}
@@ -45,7 +46,7 @@ const Sidebar = ({ child }: any) => {
 
 const SidebarBig = ({ chil }: any) => (
   <div className='hidden md:flex'>
-    <nav className='flex flex-col items-start bg-white w-72 absolute min-h-screen border-r-2 z-10 divide-y'>
+    <nav className='flex flex-col bg-white w-72 absolute min-h-screen border-r-2 z-10 divide-y'>
       <div className='w-full h-fit flex flex-col items-center justify-center'>
         <div className='pt-4'>
           <Image
@@ -75,6 +76,11 @@ const SidebarBig = ({ chil }: any) => (
         </div>
       </div>
       <MenuOptions />
+      <div className='bottom-0 absolute'>
+        <button type='button' className='bottom-0' onClick={() => signOut()}>
+          Cerrar Sesion
+        </button>
+      </div>
     </nav>
     <div className='w-full absolute pl-72'>
       <div className='bg-white w-full h-20 flex justify-end border-b-2 '>
@@ -90,11 +96,21 @@ const SidebarBig = ({ chil }: any) => (
 );
 
 const MenuOptions = () => {
-  const menuItems = adminMenuOptions.map(({ text, route, icon }) => (
-    <LinkNavigation text={text} route={route} icon={icon} key={route} />
-  ));
+  const { data: session }: any = useSession();
+  const roleUser = session.user.role.name;
+  let menuItems = [];
+  if (roleUser === 'Admin') {
+    menuItems = adminMenuOptions.map(({ text, route, icon }) => (
+      <LinkNavigation text={text} route={route} icon={icon} key={route} />
+    ));
+  }
+  if (roleUser === 'Candidate') {
+    menuItems = candidateMenuOptions.map(({ text, route, icon }) => (
+      <LinkNavigation text={text} route={route} icon={icon} key={route} />
+    ));
+  }
   return (
-    <ul className='flex flex-col sm:p-3 md:w-full md:mt-6 md:p-0'>
+    <ul className='flex flex-col w-full sm:p-3 md:mt-6 md:p-0 divide-y md:divide-none'>
       {menuItems}
     </ul>
   );
@@ -109,8 +125,8 @@ const LinkNavigation = ({ text, route, icon }) => {
       }
     >
       <Link href={route}>
-        <div className='w-full hover:cursor-pointer'>
-          <i className={icon} />
+        <div className='w-full hover:cursor-pointer flex items-center'>
+          <i className={`${icon} hidden md:flex`} />
           <span className='ml-2'>{text}</span>
         </div>
       </Link>

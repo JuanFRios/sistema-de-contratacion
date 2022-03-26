@@ -20,9 +20,9 @@ a {
 }
 
 .active {
-  @apply text-white font-extrabold bg-blue-500 p-4 my-4 w-full rounded rounded-r-full
+  @apply text-white font-extrabold bg-blue-500 md:p-4 md:my-4 w-full md:rounded md:rounded-r-full
 }
 
 .linkNavigation {
-  @apply p-4 my-1 w-full rounded rounded-r-full text-2xl
+  @apply p-1 md:p-4 md:my-1 w-full text-xl md:text-2xl flex items-center 
 }

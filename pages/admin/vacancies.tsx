@@ -7,6 +7,13 @@ import {
 } from '@mui/material';
 import useFormData from 'hooks/useFormData';
 import React, { useState } from 'react';
+import { matchRoles } from 'utils/matchRoles';
+
+export async function getServerSideProps(context) {
+  return {
+    props: { ...(await matchRoles(context)) },
+  };
+}
 
 const Vacancies = () => {
   const [expanded, setExpanded] = useState('');

@@ -1,42 +1,84 @@
-import React from 'react';
-import Link from 'next/link';
+import React, { useState } from 'react';
+import { matchRoles } from 'utils/matchRoles';
+import axios, { AxiosRequestConfig } from 'axios';
+import { ButtonLoading } from '@components/utils/ButtonLoading';
+import { toast } from 'react-toastify';
+import { nanoid } from 'nanoid';
+import { useMutation } from '@apollo/client';
+import useFormData from 'hooks/useFormData';
+import { CREATE_USER_ACCOUNT } from 'graphql/mutations/user';
+import { Button, Dialog } from '@mui/material';
 
-const candidates = () => (
-  <div>
+export async function getServerSideProps(context) {
+  const options: AxiosRequestConfig = {
+    method: 'POST',
+    url: `https://${process.env.AUTH0_ISSUER}/oauth/token`,
+    data: {
+      grant_type: 'client_credentials',
+      client_id: process.env.AUTH0_API_ID,
+      client_secret: process.env.AUTH0_API_SECRET,
+      audience: `https://${process.env.AUTH0_ISSUER}/api/v2/`,
+    },
+  };
+  const TokenResponse = await axios.request(options);
+  const token = TokenResponse.data.access_token;
+
+  return {
+    props: { token, ...(await matchRoles(context)) },
+  };
+}
+
+const Candidates = ({ token }) => {
+  const [openNewDialog, setOpenNewDialog] = useState(false);
+  const closeDialog = () => {
+    setOpenNewDialog(false);
+  };
+  return (
     <div>
       <div>
-        <h1 className='text-3xl text-slate-900 font-bold text-center m-4'>
-          Candidatos
-        </h1>
-        <Link href='/admin/createCandidate' passHref>
-          <div className='text-white text-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-bold rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 max-w-min hover:cursor-pointer w-full absolute right-40 mx-4 '>
-            Nuevo candidato
-          </div>
-        </Link>
+        <div>
+          <h1 className='text-3xl text-slate-900 font-bold text-center m-4'>
+            Candidatos
+          </h1>
+        </div>
+        <div className='m-2 flex justify-end'>
+          <Button
+            variant='contained'
+            startIcon={<i className='fa-solid fa-plus' />}
+            onClick={() => {
+              setOpenNewDialog(true);
+            }}
+          >
+            Nuevo Candidato
+          </Button>
+        </div>
+        <div className='flex flex-col items-center'>
+          <Candidate
+            name='Pepito Perez'
+            id='95949223'
+            email='pepito.perez@gmail.com'
+            phone='3213203403'
+          />
+          <Candidate
+            name='Pepito Perez'
+            id='95949223'
+            email='pepito.perez@gmail.com'
+            phone='3213203403'
+          />
+          <Candidate
+            name='Pepito Perez'
+            id='95949223'
+            email='pepito.perez@gmail.com'
+            phone='3213203403'
+          />
+        </div>
       </div>
-      <div className='flex flex-col items-center'>
-        <Candidate
-          name='Pepito Perez'
-          id='95949223'
-          email='pepito.perez@gmail.com'
-          phone='3213203403'
-        />
-        <Candidate
-          name='Pepito Perez'
-          id='95949223'
-          email='pepito.perez@gmail.com'
-          phone='3213203403'
-        />
-        <Candidate
-          name='Pepito Perez'
-          id='95949223'
-          email='pepito.perez@gmail.com'
-          phone='3213203403'
-        />
-      </div>
+      <Dialog open={openNewDialog} onClose={closeDialog}>
+        <CreateCandidateDialog closeDialog={closeDialog} token={token} />
+      </Dialog>
     </div>
-  </div>
-);
+  );
+};
 
 const Candidate = ({ name, id, email, phone }) => (
   <div>
@@ -59,4 +101,84 @@ const Candidate = ({ name, id, email, phone }) => (
   </div>
 );
 
-export default candidates;
+const CreateCandidateDialog = ({ closeDialog, token }) => {
+  const { form, formData, updateFormData } = useFormData(null);
+  const [createUser, { loading }] = useMutation(CREATE_USER_ACCOUNT);
+
+  const submitForm = async (e) => {
+    e.preventDefault();
+    const password = nanoid();
+    const options: AxiosRequestConfig = {
+      method: 'POST',
+      url: 'https://ingenieria-web-2022.us.auth0.com/api/v2/users',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      data: {
+        email: formData.email,
+        password: `${password}*`,
+        connection: 'Username-Password-Authentication',
+      },
+    };
+    try {
+      const userCreateResponse = await axios.request(options);
+      await createUser({
+        variables: {
+          data: {
+            email: userCreateResponse.data.email,
+            name: userCreateResponse.data.name,
+            image: userCreateResponse.data.picture,
+            auth0Id: userCreateResponse.data.user_id,
+            vacancyId: 'cl0y7uvp80032uou14bbvopvj',
+            role: formData.role,
+          },
+        },
+      });
+      toast.success(`Usuario creado correctamente con la clave ${password}`, {
+        autoClose: false,
+      });
+      closeDialog();
+    } catch (error) {
+      toast.error('Error creando el usuario');
+      closeDialog();
+    }
+  };
+
+  return (
+    <div className='p-5 flex flex-col items-center'>
+      <h1>Crear nuevo usuario</h1>
+      <form
+        ref={form}
+        onChange={updateFormData}
+        onSubmit={submitForm}
+        className='flex flex-col items-start'
+      >
+        <label htmlFor='email'>
+          <span className='font-bold mx-2'>Email:</span>
+          <input
+            name='email'
+            placeholder='test@test.com'
+            required
+            type='email'
+          />
+        </label>
+        <label htmlFor='role' className='my-2'>
+          <span className='font-bold mx-2'>Rol:</span>
+          <select name='role' required>
+            <option disabled selected>
+              Seleccione un rol
+            </option>
+            <option>Admin</option>
+            <option>Candidate</option>
+          </select>
+        </label>
+        <div className='w-full flex justify-center'>
+          <ButtonLoading isSubmit text='Crear Usuario' loading={loading} />
+        </div>
+      </form>
+    </div>
+  );
+};
+
+export default Candidates;

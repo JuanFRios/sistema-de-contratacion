@@ -1,5 +1,12 @@
 import React from 'react';
 import Link from 'next/link';
+import { matchRoles } from 'utils/matchRoles';
+
+export async function getServerSideProps(context) {
+  return {
+    props: { ...(await matchRoles(context)) },
+  };
+}
 
 const interviews = () => (
   <div>
