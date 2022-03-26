@@ -16,7 +16,20 @@ const VacancyResolvers = {
       });
     },
   },
-  Query: {},
+  Query: {
+    getVacancies: async (parent: any, args: any) =>
+      await prisma.vacancy.findMany({
+        include: {
+          admissionProcesess: true,
+        },
+      }),
+    getVacancy: async (parent: any, args: any) =>
+      await prisma.vacancy.findUnique({
+        where: {
+          id: args.id,
+        },
+      }),
+  },
   Mutation: {
     createVacancy: async (parent, args) => {
       const documents = await prisma.document.findMany();
