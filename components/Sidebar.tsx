@@ -57,8 +57,12 @@ const SidebarBig = ({ chil }: any) => (
           />
         </div>
         <div className='flex flex-col w-full px-4'>
-          <span className='font-extrabold text-xl'>Juan Fernando Ríos</span>
-          <span className='font-thin text-xl'>juanfer4811@gmail.com</span>
+          <span className='font-extrabold text-xl text-center'>
+            Juan Fernando Ríos
+          </span>
+          <span className='font-thin text-xl text-center'>
+            juanfer4811@gmail.com
+          </span>
         </div>
         <div className=' w-full mt-6'>
           <div className='border-2 mx-4 rounded-md bg-slate-100'>
