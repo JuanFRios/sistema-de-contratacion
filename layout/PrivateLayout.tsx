@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-imports */
 import React from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -7,8 +8,8 @@ import 'react-toastify/dist/ReactToastify.css';
 // import Footer from 'components/Footer';
 import Sidebar from 'components/Sidebar';
 
-const PrivateLayout = ({ children }: any) => {
-  // const PrivateLayout = ({ pageAuth, children }: any) => {
+const PrivateLayout = ({ pageAuth, children }: any) => {
+  // const PrivateLayout = ({ children }: any) => {
   // const { data: session, status } = useSession();
 
   // if (status === 'loading') {
@@ -24,7 +25,7 @@ const PrivateLayout = ({ children }: any) => {
   //   return <NotAuthorized />;
   // }
   // eslint-disable-next-line no-console
-  console.log('first');
+  console.log(pageAuth);
   return (
     <div>
       <Sidebar child={children} />
