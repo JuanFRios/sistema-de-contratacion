@@ -11,6 +11,15 @@ const InterviewResolvers = {
           status: "NotCompleted"
         },
       }),
+    completeInterview: async (parent, args) => {
+      return await prisma.interview.update({
+        where: { ...args.where },
+        data: {
+          ...args.data,
+          status: 'Completed'
+        },
+      });
+    },
   },
 };
 
