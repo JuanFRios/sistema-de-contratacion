@@ -23,6 +23,10 @@ const InterviewTypes = gql`
     updatedAt: Date
   }
 
+  input InterviewFilterId {
+    id: String!
+  }
+
   input InterviewCreateInput {
     name: String!
     admissionProcessId: String!
@@ -31,8 +35,13 @@ const InterviewTypes = gql`
     meetingDetail: String!
   }
 
+  input InterviewCompleteInput {
+    notes: String
+  }
+
   type Mutation {
     createInterview(data: InterviewCreateInput!): Interview
+    completeInterview(where: InterviewFilterId!, data: InterviewCompleteInput!): Interview
   }
 `;
 
