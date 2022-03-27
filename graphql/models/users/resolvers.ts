@@ -3,12 +3,12 @@ import prisma from 'config/prisma';
 
 const UserResolvers = {
   User: {
-    // profile: async (parent, args) =>
-    //   await prisma.profile.findUnique({
-    //     where: {
-    //       userId: parent.id,
-    //     },
-    //   }),
+    profile: async (parent, args) =>
+      await prisma.profile.findUnique({
+        where: {
+          userId: parent.id,
+        },
+      }),
     role: async (parent, args) =>
       await prisma.role.findUnique({
         where: {
@@ -49,6 +49,13 @@ const UserResolvers = {
             create: {
               status: 'Interview_Phase',
               vacancyId: args.data.vacancyId,
+            },
+          },
+          profile: {
+            create: {
+              phone: args.data.phone,
+              identification: args.data.identification,
+              address: args.data.address,
             },
           },
         },

@@ -8,7 +8,7 @@ const UserTypes = gql`
     image: String
     emailVerified: Date
     role: Role
-    #profile: Profile
+    profile: Profile
     createdAt: Date
     updatedAt: Date
   }
@@ -25,6 +25,9 @@ const UserTypes = gql`
     auth0Id: String!
     role: String!
     vacancyId: String!
+    phone: String!
+    identification: String!
+    address: String!
   }
 
   type Mutation {

@@ -19,7 +19,22 @@ const AdmissionProcessResolvers = {
       });
     },
   },
-  Query: {},
+  Query: {
+    getAdmissionProcessess: async () => {
+      return await prisma.admissionProcess.findMany({});
+    },
+    getAdmissionProcess: async (parent, args) => {
+      return await prisma.admissionProcess.findUnique({
+        where: {
+          id: args.id,
+        },
+        include: {
+          interviews: true,
+          uploadDocumentation: true,
+        },
+      });
+    },
+  },
   Mutation: {
     // eslint-disable-next-line arrow-body-style
     createAdmissionProcess: async (parent, args) => {
