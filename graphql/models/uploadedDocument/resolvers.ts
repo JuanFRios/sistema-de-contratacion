@@ -24,6 +24,33 @@ const UploadedDocumentResolvers = {
       });
     },
   },
+  Mutation: {
+    createOrUpdateUploadedDocument: async (parent, args) => {
+      const uploadedDocument = await prisma.uploadedDocument.findFirst({
+        where: {
+          AND:
+            [{ admissionProcessId: args.data.admissionProcessId },
+            { documentId: args.data.documentId }
+            ]
+        }
+      });
+      if (uploadedDocument) {
+        // Lo actualiza
+        return await prisma.uploadedDocument.update({
+          where: { id: uploadedDocument.id },
+          data: {
+            fileUrl: args.data.fileUrl
+          },
+        });
+      } else {
+          return await prisma.uploadedDocument.create({
+          data: {
+            ...args.data
+          },
+        })
+      }
+    },
+  }
 };
 
 export { UploadedDocumentResolvers };

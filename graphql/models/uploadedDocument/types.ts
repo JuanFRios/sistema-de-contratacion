@@ -16,6 +16,16 @@ const UploadedDocumentTypes = gql`
     getUploadedDocuments: [UploadedDocument]
     getUploadedDocument(id: String!): UploadedDocument
   }
+
+  input UploadedDocumentCreateOrUpdateInput {
+    admissionProcessId: String
+    fileUrl: String
+    documentId: String
+  }
+
+  type Mutation {
+    createOrUpdateUploadedDocument(data: UploadedDocumentCreateOrUpdateInput!): UploadedDocument
+  }
 `;
 
 export { UploadedDocumentTypes };
