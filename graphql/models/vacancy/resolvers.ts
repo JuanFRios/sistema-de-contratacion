@@ -15,6 +15,13 @@ const VacancyResolvers = {
         },
       });
     },
+    admissionProcesess: async (parent, args) => {
+      return await prisma.admissionProcess.findMany({
+        where: {
+          vacancyId: parent.id
+        },
+      });
+    },
   },
   Query: {
     getVacancies: async (parent: any, args: any) =>
@@ -29,6 +36,24 @@ const VacancyResolvers = {
           id: args.id,
         },
       }),
+    getVacancyByCandidate: async (parent, args) => {
+      const admissionProcesses = await prisma.admissionProcess.findMany({
+        where: {
+          ...args.where
+        }
+      });
+      console.log(admissionProcesses);
+      const { vacancyId } = admissionProcesses[0];
+      console.log('-----------VACANCYID----------', vacancyId);
+      return await prisma.vacancy.findUnique({
+        where: {
+          id: vacancyId
+        },
+        // include: {
+        //   admissionProcesess: true,
+        // },
+      });
+    },
   },
   Mutation: {
     createVacancy: async (parent, args) => {
