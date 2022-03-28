@@ -51,7 +51,8 @@ const InterviewTypes = gql`
   }
 
   type Query {
-    getInterviewsByInterviewerId(where: InterviewInterviewerId): [Interview]
+    getInterviewsByInterviewerId(where: InterviewInterviewerId!): [Interview]
+    getInterview(where: InterviewFilterId!): Interview
   }
 `;
 
