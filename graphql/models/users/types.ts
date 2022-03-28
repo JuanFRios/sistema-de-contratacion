@@ -15,6 +15,7 @@ const UserTypes = gql`
 
   type Query {
     getUsers: [User]
+    getCandidates: [User]
     getUser(email: String!): User
   }
 

@@ -18,6 +18,13 @@ const InterviewResolvers = {
     },
   },
   Query: {
+    getInterview: async (parent, args) => {
+      return await prisma.interview.findUnique({
+        where: {
+          ...args.where,
+        },
+      });
+    },
     getInterviewsByInterviewerId: async (parent, args) => {
       return await prisma.interview.findMany({
         where: {

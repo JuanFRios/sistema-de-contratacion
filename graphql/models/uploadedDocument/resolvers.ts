@@ -3,6 +3,15 @@
 import prisma from 'config/prisma';
 
 const UploadedDocumentResolvers = {
+  UploadedDocument: {
+    document: async (parent, args) => {
+      return await prisma.document.findUnique({
+        where: {
+          id: parent.documentId,
+        },
+      });
+    },
+  },
   Query: {
     getUploadedDocuments: async () => {
       return await prisma.uploadedDocument.findMany({

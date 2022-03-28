@@ -19,6 +19,15 @@ const UserResolvers = {
   Query: {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     getUsers: async (parent: any, args: any) => await prisma.user.findMany({}),
+    getCandidates: async () => {
+      return await prisma.user.findMany({
+        where: {
+          role: {
+            name: 'Candidate'
+          }
+        }
+      });
+    },
     getUser: async (parent, args) =>
       await prisma.user.findUnique({
         where: {
