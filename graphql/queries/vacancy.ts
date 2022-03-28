@@ -1,12 +1,17 @@
 import { gql } from '@apollo/client';
 
 const GET_VACANCIES = gql`
-  query Query {
-    getClients {
+  query GetVacancies {
+    getVacancies {
       id
-      name
-      updatedAt
-      createdAt
+      position
+      admissionProcesess {
+        id
+        candidate {
+          name
+        }
+        status
+      }
     }
   }
 `;
