@@ -26,6 +26,17 @@ const ProfileResolvers = {
         },
       });
     },
+
+    updateUser: async (parent, args) => {
+      return await prisma.profile.update({
+        where: {
+          id: args.user,
+        },
+        data: {
+          ...args.data,
+        },
+      });
+    },
   },
 };
 

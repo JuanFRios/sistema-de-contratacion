@@ -1,3 +1,4 @@
+/* eslint-disable arrow-body-style */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import prisma from 'config/prisma';
 
@@ -23,9 +24,9 @@ const UserResolvers = {
       return await prisma.user.findMany({
         where: {
           role: {
-            name: 'Candidate'
-          }
-        }
+            name: 'Candidate',
+          },
+        },
       });
     },
     getUser: async (parent, args) =>
