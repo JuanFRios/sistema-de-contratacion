@@ -25,6 +25,11 @@ export const adminMenuOptions: MenuItem[] = [
     route: '/admin/documents',
     icon: 'fa-solid fa-folder-open',
   },
+  {
+    text: 'Reporte',
+    route: '/admin/report',
+    icon: 'fa-solid fa-chart-column',
+  },
 ];
 
 export const candidateMenuOptions: MenuItem[] = [
