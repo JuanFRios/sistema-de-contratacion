@@ -108,8 +108,8 @@ model Document {
 
 model UploadedDocument {
   id                 String            @id @default(cuid())
-  admissionProcess   AdmissionProcess? @relation(fields: [admissionProcessId], references: [id])
-  admissionProcessId String?
+  admissionProcess   AdmissionProcess @relation(fields: [admissionProcessId], references: [id])
+  admissionProcessId String
   document           Document?         @relation(fields: [documentId], references: [id])
   documentId         String?
   fileUrl            String?

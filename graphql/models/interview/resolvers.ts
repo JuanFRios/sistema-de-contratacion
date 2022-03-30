@@ -1,7 +1,38 @@
 import prisma from 'config/prisma';
 
 const InterviewResolvers = {
-  Query: {},
+  Interview: {
+    admissionProcess: async (parent, args) => {
+      return await prisma.admissionProcess.findUnique({
+        where: {
+          id: parent.admissionProcessId,
+        },
+      });
+    },
+    interviewer: async (parent, args) => {
+      return await prisma.user.findUnique({
+        where: {
+          id: parent.interviewerId,
+        },
+      });
+    },
+  },
+  Query: {
+    getInterview: async (parent, args) => {
+      return await prisma.interview.findUnique({
+        where: {
+          ...args.where,
+        },
+      });
+    },
+    getInterviewsByInterviewerId: async (parent, args) => {
+      return await prisma.interview.findMany({
+        where: {
+          interviewerId: args.where.interviewerId
+        }
+      });
+    }
+  },
   Mutation: {
     createInterview: async (parent, args) =>
       await prisma.interview.create({

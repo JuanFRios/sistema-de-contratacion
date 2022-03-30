@@ -7,6 +7,10 @@ const AdmissionProcessTypes = gql`
     Discarded
   }
 
+  input AdmissionProcessFilterId {
+    id: String!
+  }
+
   type AdmissionProcess {
     id: ID
     vacancy: Vacancy
@@ -26,13 +30,18 @@ const AdmissionProcessTypes = gql`
     status: Enum_StatusAdmissionProcess!
   }
 
+  input AdmissionProcessChangeStatusInput {
+    status: String
+  }
+
   type Query {
     getAdmissionProcessess: [AdmissionProcess]
-    getAdmissionProcess(id: String!): AdmissionProcess
+    getAdmissionProcess(where: AdmissionProcessFilterId!): AdmissionProcess
   }
 
   type Mutation {
     createAdmissionProcess(data: AdmissionProcessCreateInput!): AdmissionProcess
+    changeStatusAdmissionProcess(where: AdmissionProcessFilterId!, data: AdmissionProcessChangeStatusInput!): AdmissionProcess
   }
 `;
 
