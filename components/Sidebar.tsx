@@ -58,28 +58,40 @@ const SidebarBig = ({ chil }: any) => (
           />
         </div>
         <div className='flex flex-col w-full px-4'>
-          <span className='font-extrabold text-xl text-center'>
+          <span className='font-bold text-2xl text-center'>
             Juan Fernando Ríos
           </span>
-          <span className='font-thin text-xl text-center'>
+          <span className='font-light text-lg text-center'>
             juanfer4811@gmail.com
           </span>
         </div>
-        <div className=' w-full mt-6'>
-          <div className='border-2 mx-4 rounded-md bg-slate-100'>
+        <div className='w-2/3 my-4'>
+          <div className='border-2 mx-4 rounded-full border-slate-300 hover:border-blue-400'>
             <Link href='/'>
               <div className='w-full hover:cursor-pointer flex justify-center'>
+                <i className='fa-solid fa-pen-to-square my-1' />
                 <span className='ml-2'>Editar perfil</span>
               </div>
             </Link>
           </div>
         </div>
       </div>
-      <MenuOptions />
-      <div className='bottom-0 absolute'>
-        <button type='button' className='bottom-0' onClick={() => signOut()}>
-          Cerrar Sesion
-        </button>
+      <div className='font-normal'>
+        <MenuOptions />
+      </div>
+      <div className='bottom-0 absolute w-full my-2 py-2'>
+        <div className='mx-4'>
+          <div className='flex justify-center'>
+            <button
+              type='button'
+              className='bottom-0 '
+              onClick={() => signOut()}
+            >
+              <i className='fa-solid fa-door-open' />
+              <span className='ml-2 font-bold'>Cerrar Sesion</span>
+            </button>
+          </div>
+        </div>
       </div>
     </nav>
     <div className='w-full absolute pl-72'>
