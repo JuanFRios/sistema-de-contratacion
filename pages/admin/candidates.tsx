@@ -4,10 +4,11 @@ import axios, { AxiosRequestConfig } from 'axios';
 import { ButtonLoading } from '@components/utils/ButtonLoading';
 import { toast } from 'react-toastify';
 import { nanoid } from 'nanoid';
-import { useMutation } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client';
 import useFormData from 'hooks/useFormData';
 import { CREATE_USER_ACCOUNT } from 'graphql/mutations/user';
 import { Button, Dialog } from '@mui/material';
+import { GET_CANDIDATES } from 'graphql/queries/user';
 
 export async function getServerSideProps(context) {
   const options: AxiosRequestConfig = {
@@ -33,6 +34,13 @@ const Candidates = ({ token }) => {
   const closeDialog = () => {
     setOpenNewDialog(false);
   };
+
+  const { data, loading } = useQuery(GET_CANDIDATES, {
+    fetchPolicy: 'cache-and-network',
+  });
+
+  if (loading) return <div>Loading....</div>;
+
   return (
     <div>
       <div>
@@ -53,24 +61,9 @@ const Candidates = ({ token }) => {
           </Button>
         </div>
         <div className='flex flex-col items-center'>
-          <Candidate
-            name='Pepito Perez'
-            id='95949223'
-            email='pepito.perez@gmail.com'
-            phone='3213203403'
-          />
-          <Candidate
-            name='Pepito Perez'
-            id='95949223'
-            email='pepito.perez@gmail.com'
-            phone='3213203403'
-          />
-          <Candidate
-            name='Pepito Perez'
-            id='95949223'
-            email='pepito.perez@gmail.com'
-            phone='3213203403'
-          />
+          {data.getCandidates.map((c) => (
+            <Candidate key={c.id} candidate={c} />
+          ))}
         </div>
       </div>
       <Dialog open={openNewDialog} onClose={closeDialog}>
@@ -80,19 +73,19 @@ const Candidates = ({ token }) => {
   );
 };
 
-const Candidate = ({ name, id, email, phone }) => (
+const Candidate = ({ candidate }) => (
   <div>
     <div className='border-2 border-inherit rounded-lg bg-slate-50 drop-shadow-lg mx-20 my-3 max-w-xl text-slate-900 hover:cursor-pointer hover:bg-slate-100'>
       <div className='flex flex-col align-center'>
         <div className='grid grid-cols-3 m-3'>
-          <div className=''>
-            <h2>{name}</h2>
-            <h2>Documento: {id}</h2>
+          <div className='flex flex-col m-4'>
+            <h2>{candidate.name}</h2>
+            <h2>Documento: {candidate.identification}</h2>
           </div>
-          <div className='flex justify-end '>
-            <h2 className='absolute right-0 mx-4'>Correo: {email}</h2>
-            <h2 className='absolute inset-y-10 right-0 mx-4'>
-              Teléfono: {phone}
+          <div className='flex flex-col m-4'>
+            <h2 className='absolute right-0 mx-4'>Correo: {candidate.email}</h2>
+            <h2 className='absolute inset-y-10 right-0 m-4'>
+              Teléfono: {candidate.phone}
             </h2>
           </div>
         </div>

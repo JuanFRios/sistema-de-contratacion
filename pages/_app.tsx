@@ -1,5 +1,6 @@
 import '../styles/globals.css';
 import type { AppProps } from 'next/app';
+import { WidgetLoader } from 'react-cloudinary-upload-widget';
 import {
   ApolloClient,
   InMemoryCache,
@@ -24,6 +25,7 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   return (
     <SessionProvider session={session}>
       <ApolloProvider client={client}>
+        <WidgetLoader />
         <Head>
           <title>Join us</title>
         </Head>
