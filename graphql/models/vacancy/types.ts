@@ -4,6 +4,11 @@ const VacancyTypes = gql`
   type Query {
     getVacancies: [Vacancy]
     getVacancy(id: String!): Vacancy
+    getVacancyByCandidate(where: VacancyCandidateId!): Vacancy
+  }
+
+  input VacancyCandidateId {
+    candidateId: String!
   }
 
   type Vacancy {

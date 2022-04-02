@@ -13,7 +13,9 @@ const InterviewTypes = gql`
   type Interview {
     id: ID
     name: String
+    admissionProcess: AdmissionProcess
     admissionProcessId: String
+    interviewer: User
     interviewerId: String
     date: Date
     meetingDetail: String
@@ -25,6 +27,10 @@ const InterviewTypes = gql`
 
   input InterviewFilterId {
     id: String!
+  }
+
+  input InterviewInterviewerId {
+    interviewerId: String!
   }
 
   input InterviewCreateInput {
@@ -42,6 +48,11 @@ const InterviewTypes = gql`
   type Mutation {
     createInterview(data: InterviewCreateInput!): Interview
     completeInterview(where: InterviewFilterId!, data: InterviewCompleteInput!): Interview
+  }
+
+  type Query {
+    getInterviewsByInterviewerId(where: InterviewInterviewerId!): [Interview]
+    getInterview(where: InterviewFilterId!): Interview
   }
 `;
 

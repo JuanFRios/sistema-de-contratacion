@@ -10,6 +10,10 @@ import { UploadedDocumentTypes } from 'graphql/models/uploadedDocument/types';
 
 const genericTypes = gql`
   scalar Date
+
+  input StringEditField {
+    set: String
+  }
 `;
 
 export const types = [

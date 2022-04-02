@@ -18,6 +18,20 @@ const AdmissionProcessResolvers = {
         },
       });
     },
+    interviews: async (parent, args) => {
+      return await prisma.interview.findMany({
+        where: {
+          admissionProcessId: parent.id,
+        },
+      });
+    },
+    uploadDocumentation: async (parent, args) => {
+      return await prisma.uploadedDocument.findMany({
+        where: {
+          admissionProcessId: parent.id,
+        },
+      });
+    },
   },
   Query: {
     getAdmissionProcessess: async () => {
@@ -26,7 +40,7 @@ const AdmissionProcessResolvers = {
     getAdmissionProcess: async (parent, args) => {
       return await prisma.admissionProcess.findUnique({
         where: {
-          id: args.id,
+          ...args.where
         },
         include: {
           interviews: true,
@@ -41,6 +55,14 @@ const AdmissionProcessResolvers = {
       return await prisma.admissionProcess.create({
         data: {
           ...args.data,
+        },
+      });
+    },
+    changeStatusAdmissionProcess: async (parent, args) => {
+      return await prisma.admissionProcess.update({
+        where: { ...args.where },
+        data: {
+          ...args.data
         },
       });
     },
