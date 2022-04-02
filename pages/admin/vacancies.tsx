@@ -10,6 +10,7 @@ import { GET_VACANCIES } from 'graphql/queries/vacancy';
 import useFormData from 'hooks/useFormData';
 import React, { useState } from 'react';
 import { matchRoles } from 'utils/matchRoles';
+import AdmissionProcess from '../../components/admin/AdmissionProcess';
 
 export async function getServerSideProps(context) {
   return {
@@ -111,6 +112,10 @@ const Vacancy = ({ vacancy, expanded, handleChange }) => {
 };
 
 const ItemContratationProcess = ({ admissionProcess }) => {
+  const [openProcessDialog, setOpenProcessDialog] = useState(false);
+  const closeDialog = () => {
+    setOpenProcessDialog(false);
+  };
   let className;
   let span;
   if (admissionProcess.status === 'Interview_Phase') {
@@ -124,12 +129,28 @@ const ItemContratationProcess = ({ admissionProcess }) => {
     span = 'Contratación';
   }
   return (
-    <div className='flex justify-center text-xl my-1'>
-      <div className='w-full md:w-11/12 h-20 rounded-lg bg-white p-4 flex items-center justify-between'>
-        <p>{admissionProcess.candidate.name}</p>
-        <span className={className}>{span}</span>
+    <>
+      <div className='flex justify-center text-xl my-1'>
+        <div className='w-full md:w-11/12 h-20 rounded-lg bg-white p-4 flex items-center justify-between'>
+          <p>{admissionProcess.candidate.name}</p>
+          <button
+            type='button'
+            onClick={() => {
+              setOpenProcessDialog(true);
+            }}
+          >
+            Ir
+          </button>
+          <span className={className}>{span}</span>
+        </div>
       </div>
-    </div>
+      <Dialog open={openProcessDialog} onClose={closeDialog}>
+        <AdmissionProcess
+          closeDialog={closeDialog}
+          admissionProcessId={admissionProcess.id}
+        />
+      </Dialog>
+    </>
   );
 };
 
