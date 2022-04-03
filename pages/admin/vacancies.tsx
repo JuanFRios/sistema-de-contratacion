@@ -118,16 +118,29 @@ const ItemContratationProcess = ({ admissionProcess }) => {
   };
   let className;
   let span;
-  if (admissionProcess.status === 'Interview_Phase') {
-    className =
-      'text-sm text-teal-800 font-mono bg-teal-100 inline rounded-full px-2 align-top float-right';
-    span = 'Entrevistas';
+  switch (admissionProcess.status) {
+    case 'Interview_Phase':
+      className =
+        'text-sm text-sky-700 font-mono bg-sky-200 inline rounded-full px-2 align-top float-right';
+      span = 'Entrevistas';
+      break;
+    case 'Hiring_Phase':
+      className =
+        'text-sm text-teal-800 font-mono bg-teal-100 inline rounded-full px-2 align-top float-right';
+      span = 'Contratación';
+      break;
+    case 'Discarded':
+      className =
+        'text-sm text-red-800 font-mono bg-red-400 inline rounded-full px-2 align-top float-right';
+      span = 'Descartado';
+      break;
+    default:
+      className =
+        'text-sm text-sky-700 font-mono bg-sky-200 inline rounded-full px-2 align-top float-right';
+      span = 'Indeterminado';
+      break;
   }
-  if (admissionProcess.status === 'Hiring_Phase') {
-    className =
-      'text-sm text-teal-800 font-mono bg-teal-100 inline rounded-full px-2 align-top float-right';
-    span = 'Contratación';
-  }
+
   return (
     <>
       <div className='flex justify-center text-xl my-1'>
