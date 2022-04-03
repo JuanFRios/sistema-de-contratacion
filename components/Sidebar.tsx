@@ -23,7 +23,7 @@ const Sidebar = ({ child }: any) => {
             >
               <i className='fas fa-bars text-4xl' />
             </button>
-            <div className='pr-1 pt-1'>
+            <div className='pr-1 flex items-center'>
               <img src='/logo-joinus.png' alt='Logo join us' />
             </div>
           </div>
@@ -81,22 +81,22 @@ const SidebarBig = ({ chil }: any) => (
       </div>
       <div className='bottom-0 absolute w-full my-2 py-2'>
         <div className='mx-4'>
-          <div className='flex justify-center'>
+          <div className='flex justify-center font-semibold text-xl'>
             <button
               type='button'
               className='bottom-0 '
               onClick={() => signOut()}
             >
               <i className='fa-solid fa-door-open' />
-              <span className='ml-2 font-bold'>Cerrar Sesion</span>
+              <span className='ml-2 font-semibold text-xl'>Cerrar Sesion</span>
             </button>
           </div>
         </div>
       </div>
     </nav>
-    <div className='w-full absolute pl-72'>
-      <div className='bg-white w-full h-20 flex justify-end border-b-2 '>
-        <div className='pr-9 pt-1'>
+    <div className='w-full pl-72'>
+      <div className='bg-white w-full h-20 flex justify-end items-center border-b-2 '>
+        <div className='pr-9'>
           <img src='/logo-joinus.png' alt='Logo join us' />
         </div>
       </div>

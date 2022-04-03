@@ -38,10 +38,10 @@ const Vacancies = () => {
   return (
     <div className='flex justify-center'>
       <div className='w-full lg:w-3/5 '>
-        <div className='flex justify-center p-6 font-bold text-3xl'>
+        <div className='flex justify-center pt-12 pb-6 font-bold text-4xl'>
           <p>Vacantes abiertas</p>
         </div>
-        <div className='m-2 flex justify-end'>
+        <div className='m-4 pb-6 flex justify-end text-9xl'>
           <Button
             variant='contained'
             startIcon={<i className='fa-solid fa-plus' />}
@@ -75,7 +75,7 @@ const Vacancy = ({ vacancy, expanded, handleChange }) => {
     setOpenInfoDialog(false);
   };
   return (
-    <div>
+    <div className='py-1 text-lg'>
       <Accordion
         expanded={expanded === vacancy.id}
         onChange={handleChange(vacancy.id)}
@@ -143,7 +143,7 @@ const ItemContratationProcess = ({ admissionProcess }) => {
 
   return (
     <>
-      <div className='flex justify-center text-xl my-1'>
+      <div className='flex justify-center text-xl my-2'>
         <div className='w-full md:w-11/12 h-20 rounded-lg bg-white p-4 flex items-center justify-between'>
           <p>{admissionProcess.candidate.name}</p>
           <button
