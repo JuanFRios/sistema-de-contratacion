@@ -6,10 +6,15 @@ import Box from '@mui/material/Box';
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
-import StepContent from '@mui/material/StepContent';
+// import StepContent from '@mui/material/StepContent';
 import Button from '@mui/material/Button';
-import Paper from '@mui/material/Paper';
+// import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
+import {
+  steps,
+  AdmissionStatus,
+  decodeStep,
+} from '../../utils/admissionProcess';
 
 const AdmissionProcess = ({ closeDialog, admissionProcessId }) => {
   const { data: admissionProcess, loading } = useQuery(
@@ -30,16 +35,22 @@ const AdmissionProcess = ({ closeDialog, admissionProcessId }) => {
 
   if (loading) return <div>Loading...</div>;
 
+  let image =
+    'https://res.cloudinary.com/proyecto-integrador-udea-2022/image/upload/v1647726660/Screenshot_from_2022-03-19_16-50-20_kqfsoy.png';
+  if (
+    admissionProcess.getAdmissionProcess.candidate.profile &&
+    admissionProcess.getAdmissionProcess.candidate.profile.customImage
+  ) {
+    image = admissionProcess.getAdmissionProcess.candidate.profile.customImage;
+  } else if (admissionProcess.getAdmissionProcess.candidate.image) {
+    image = admissionProcess.getAdmissionProcess.candidate.image;
+  }
+
   return (
-    <div className='p-10 flex flex-col items-center'>
-      <div className='flex items-center'>
+    <div className='p-10 flex flex-col items-center w-full'>
+      <div className='flex items-center w-full'>
         <Image
-          src={
-            admissionProcess.getAdmissionProcess.candidate.profile
-              ? admissionProcess.getAdmissionProcess.candidate.profile
-                  .customImage
-              : admissionProcess.getAdmissionProcess.candidate.image
-          }
+          src={image}
           alt='Perfil del candidato'
           height={60}
           width={60}
@@ -49,7 +60,11 @@ const AdmissionProcess = ({ closeDialog, admissionProcessId }) => {
       </div>
       <div>
         <div>AdmissionProcess {admissionProcessId}</div>
-        <BodyAdmissionProcess />
+        <BodyAdmissionProcess
+          admissionProcess={decodeStep(
+            admissionProcess.getAdmissionProcess.status
+          )}
+        />
       </div>
 
       <div className='flex justify-end'>
@@ -67,28 +82,18 @@ const AdmissionProcess = ({ closeDialog, admissionProcessId }) => {
   );
 };
 
-const BodyAdmissionProcess = () => {
-  const steps = [
-    {
-      label: 'Select campaign settings',
-      description: `For each ad campaign that you create, you can control how much
-                you're willing to spend on clicks and conversions, which networks
-                and geographical locations you want your ads to show on, and more.`,
-    },
-    {
-      label: 'Create an ad group',
-      description:
-        'An ad group contains one or more ads which target a shared set of keywords.',
-    },
-    {
-      label: 'Create an ad',
-      description: `Try out different ad text to see what brings in the most customers,
-                and learn how to enhance your ads using features like ad extensions.
-                If you run into any problems with your ads, find out how to tell if
-                they're running and how to resolve approval issues.`,
-    },
-  ];
-  const [activeStep, setActiveStep] = useState(0);
+const BodyAdmissionProcess = ({ admissionProcess }) => {
+  const [activeStep, setActiveStep] = useState(admissionProcess);
+  if (admissionProcess === AdmissionStatus.FASE_ENTREVISTAS) {
+    // setActiveStep(0);
+    console.log('s');
+  }
+  if (admissionProcess === AdmissionStatus.DESCARTADO) {
+    // setActiveStep(1);
+    console.log('object');
+  }
+
+  console.log(admissionProcess);
 
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -103,50 +108,76 @@ const BodyAdmissionProcess = () => {
   };
 
   return (
-    <Box sx={{ maxWidth: 400 }}>
-      <Stepper activeStep={activeStep} orientation='horizontal'>
-        {steps.map((step, index) => (
-          <Step key={step.label}>
-            <StepLabel
-              optional={
-                index === 2 ? (
-                  <Typography variant='caption'>Last step</Typography>
-                ) : null
-              }
-            >
-              {step.label}
-            </StepLabel>
-            <StepContent>
-              <InterviewDeatail />
-              <Box sx={{ mb: 2 }}>
-                <div>
-                  <Button
-                    variant='contained'
-                    onClick={handleNext}
-                    sx={{ mt: 1, mr: 1 }}
-                  >
-                    {index === steps.length - 1 ? 'Finish' : 'Continue'}
-                  </Button>
-                  <Button
-                    disabled={index === 0}
-                    onClick={handleBack}
-                    sx={{ mt: 1, mr: 1 }}
-                  >
-                    Back
-                  </Button>
-                </div>
-              </Box>
-            </StepContent>
-          </Step>
-        ))}
+    <Box sx={{ width: '100%' }}>
+      <Stepper activeStep={activeStep} alternativeLabel>
+        {steps.map((step) => {
+          const stepProps: { completed?: boolean } = {};
+          const labelProps: {
+            optional?: React.ReactNode;
+          } = {};
+          return (
+            <Step key={step.label} {...stepProps}>
+              <StepLabel {...labelProps}>{step.label}</StepLabel>
+            </Step>
+          );
+        })}
       </Stepper>
+      {activeStep === 0 && (
+        <>
+          <Typography sx={{ mt: 2, mb: 1 }}>Step {activeStep + 1}</Typography>
+          <p>Holaaaaaaa</p>
+          <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
+            <Button
+              color='inherit'
+              disabled
+              onClick={handleBack}
+              sx={{ mr: 1 }}
+            >
+              Back
+            </Button>
+            <Box sx={{ flex: '1 1 auto' }} />
+            <Button onClick={handleNext}>
+              {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
+            </Button>
+          </Box>
+        </>
+      )}
+      {activeStep === 1 && (
+        <>
+          <Typography sx={{ mt: 2, mb: 1 }}>Step {activeStep + 1}</Typography>
+          <InterviewDeatail />
+          <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
+            <Button color='inherit' onClick={handleBack} sx={{ mr: 1 }}>
+              Back
+            </Button>
+            <Box sx={{ flex: '1 1 auto' }} />
+            <Button onClick={handleNext}>
+              {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
+            </Button>
+          </Box>
+        </>
+      )}
       {activeStep === steps.length && (
-        <Paper square elevation={0} sx={{ p: 3 }}>
-          <Typography>All steps completed - you&apos;re finished</Typography>
-          <Button onClick={handleReset} sx={{ mt: 1, mr: 1 }}>
-            Reset
-          </Button>
-        </Paper>
+        <>
+          <Typography sx={{ mt: 2, mb: 1 }}>
+            All steps completed - you&apos;re finished
+          </Typography>
+          <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
+            <Box sx={{ flex: '1 1 auto' }} />
+            <Button onClick={handleReset}>Reset</Button>
+          </Box>
+        </>
+      )}
+      {activeStep === -1 && (
+        <>
+          <Typography sx={{ mt: 2, mb: 1 }}>
+            EL usuario ha sido descartado para la vacante
+          </Typography>
+          <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
+            <Box sx={{ flex: '1 1 auto' }} />
+            <Button onClick={handleReset}>Reset</Button>
+          </Box>
+        </>
       )}
     </Box>
   );

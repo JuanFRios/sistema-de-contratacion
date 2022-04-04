@@ -11,6 +11,7 @@ import useFormData from 'hooks/useFormData';
 import React, { useState } from 'react';
 import { matchRoles } from 'utils/matchRoles';
 import AdmissionProcess from '../../components/admin/AdmissionProcess';
+import { AdmissionStatus } from '../../utils/admissionProcess';
 
 export async function getServerSideProps(context) {
   return {
@@ -119,17 +120,17 @@ const ItemContratationProcess = ({ admissionProcess }) => {
   let className;
   let span;
   switch (admissionProcess.status) {
-    case 'Interview_Phase':
+    case AdmissionStatus.FASE_ENTREVISTAS:
       className =
         'text-sm text-sky-700 font-mono bg-sky-200 inline rounded-full px-2 align-top float-right';
       span = 'Entrevistas';
       break;
-    case 'Hiring_Phase':
+    case AdmissionStatus.FASE_CONTRATACION:
       className =
         'text-sm text-teal-800 font-mono bg-teal-100 inline rounded-full px-2 align-top float-right';
       span = 'Contratación';
       break;
-    case 'Discarded':
+    case AdmissionStatus.DESCARTADO:
       className =
         'text-sm text-red-800 font-mono bg-red-400 inline rounded-full px-2 align-top float-right';
       span = 'Descartado';
