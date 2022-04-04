@@ -1,10 +1,16 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { matchRoles } from 'utils/matchRoles';
 import dynamic from 'next/dynamic';
+import { useQuery } from '@apollo/client';
+import { GET_CHART_DATA } from 'graphql/queries/chart';
 
-const ReactApexChart = dynamic(() => import('react-apexcharts'), {
-  ssr: false,
-});
+const ReactApexChart = dynamic(
+  // eslint-disable-next-line arrow-body-style
+  () => {
+    return import('react-apexcharts');
+  },
+  { ssr: false }
+);
 
 export async function getServerSideProps(context) {
   return {
@@ -13,7 +19,9 @@ export async function getServerSideProps(context) {
 }
 
 const Report = () => {
-  const options: any = {
+  const { data, loading } = useQuery(GET_CHART_DATA);
+
+  const [options, setOptions] = useState({
     chart: {
       type: 'bar',
       height: 350,
@@ -28,26 +36,23 @@ const Report = () => {
       enabled: false,
     },
     xaxis: {
-      categories: [
-        'South Korea',
-        'Canada',
-        'United Kingdom',
-        'Netherlands',
-        'Italy',
-        'France',
-        'Japan',
-        'United States',
-        'China',
-        'Germany',
-      ],
+      categories: [],
     },
-  };
+  });
 
-  const series = [
-    {
-      data: [400, 430, 448, 470, 540, 580, 690, 1100, 1200, 1380],
-    },
-  ];
+  const [series, setSeries] = useState([]);
+
+  useEffect(() => {
+    if (data) {
+      setSeries(data.getChartData.series);
+      setOptions({
+        ...options,
+        xaxis: { ...options.xaxis, categories: data.getChartData.categories },
+      });
+    }
+  }, [data, options]);
+
+  if (loading) return <div>Loading...</div>;
 
   return (
     <div>

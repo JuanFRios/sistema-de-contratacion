@@ -10,7 +10,7 @@ import { GET_VACANCIES } from 'graphql/queries/vacancy';
 import useFormData from 'hooks/useFormData';
 import React, { useState } from 'react';
 import { matchRoles } from 'utils/matchRoles';
-import AdmissionProcess from '../../components/admin/AdmissionProcess';
+import AdmissionProcess from 'components/admin/AdmissionProcess';
 
 export async function getServerSideProps(context) {
   return {

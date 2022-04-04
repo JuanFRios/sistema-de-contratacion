@@ -1,43 +1,56 @@
 import React from 'react';
 import Link from 'next/link';
+import { GET_INTERVIEWS } from 'graphql/queries/interview';
+import { useQuery } from '@apollo/client';
+import { matchRoles } from 'utils/matchRoles';
 
 // import useFormData from 'hooks/useFormData';
 
-// const interview = () => (
-//   <div>
-//     <Interview
-//       interview='Entrevista psicológica'
-//       vacancy='Vacante1'
-//       name='Pepito Perez'
-//       date='Martes 3 de marzo 12:00pm'
-//       address='Calle 23 # 24-32'
-//     />
-//   </div>
-// );
+export async function getServerSideProps(context) {
+  return {
+    props: { ...(await matchRoles(context)) },
+  };
+}
+
+const Interview = () => {
+  const { data, loading } = useQuery(GET_INTERVIEWS, {
+    fetchPolicy: 'cache-and-network',
+  });
+
+  if (loading) return <div>Loading....</div>;
+
+  return (
+    <div>
+      {data.getInterview.map((i) => (
+        <InterviewDetail key={i.id} interview={i} />
+      ))}
+    </div>
+  );
+};
 
 // eslint-disable-next-line @typescript-eslint/no-shadow
 
-const interview = () => (
+const InterviewDetail = ({ interview }) => (
   <div className='text-slate-900 place-items-center'>
     <div className='flex flex-col font-bold place-items-center text-4xl m-8 mx-4 my-4 border-2 border-inherit rounded-lg bg-slate-50 drop-shadow-lg'>
-      <h1 className='mx-4 my-4'>Entrevista psicológica</h1>
+      <h1 className='mx-4 my-4'>{interview.name}</h1>
     </div>
     <div className='m-6 text-2xl '>
       <div className='flex mx-4'>
         <h1 className='font-bold mx-4'>Vacante: </h1>
-        <h1>Vacante1</h1>
+        <h1>{interview.position}</h1>
       </div>
       <div className='flex mx-4'>
         <h1 className='font-bold mx-4'>Nombre: </h1>
-        <h1>Pepito Perez</h1>
+        <h1>{interview.candidate.name}</h1>
       </div>
       <div className='flex mx-4'>
         <h1 className='font-bold mx-4'>Fecha: </h1>
-        <h1>Martes 3 de marzo 12:00pm</h1>
+        <h1>{interview.date}</h1>
       </div>
       <div className='flex mx-4'>
         <h1 className='font-bold mx-4'>Lugar: </h1>
-        <h1>Calle 23 # 24-32</h1>
+        <h1>{interview.meetingDetail}</h1>
       </div>
     </div>
     <div className='flex mx-12 max-w-lg  '>
@@ -56,4 +69,4 @@ const interview = () => (
   </div>
 );
 
-export default interview;
+export default Interview;

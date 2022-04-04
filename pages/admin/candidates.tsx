@@ -74,19 +74,24 @@ const Candidates = ({ token }) => {
 };
 
 const Candidate = ({ candidate }) => (
-  <div>
+  <div className='mx-2'>
     <div className='border-2 border-inherit rounded-lg bg-slate-50 drop-shadow-lg mx-20 my-3 max-w-xl text-slate-900 hover:cursor-pointer hover:bg-slate-100'>
       <div className='flex flex-col align-center'>
         <div className='grid grid-cols-3 m-3'>
           <div className='flex flex-col m-4'>
-            <h2>{candidate.name}</h2>
-            <h2>Documento: {candidate.identification}</h2>
+            <h2 className='flex mx-0.5'>{candidate.name}</h2>
+            <h2 className='font-bold'>Documento: </h2>
+            <h2>{candidate.identification}</h2>
           </div>
           <div className='flex flex-col m-4'>
-            <h2 className='absolute right-0 mx-4'>Correo: {candidate.email}</h2>
-            <h2 className='absolute inset-y-10 right-0 m-4'>
-              Teléfono: {candidate.phone}
-            </h2>
+            <div className='flex absolute right-0 mx-4'>
+              <h2 className='mx-2 font-bold'>Correo: </h2>
+              <h2>{candidate.email}</h2>
+            </div>
+            <div className='absolute inset-y-10 right-0 m-4'>
+              <h2 className='font-bold'>Teléfono:</h2>
+              <h2>{candidate.phone}</h2>
+            </div>
           </div>
         </div>
       </div>

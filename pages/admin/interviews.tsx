@@ -1,8 +1,8 @@
 import React from 'react';
 // import Link from 'next/link';
 import { matchRoles } from 'utils/matchRoles';
-// import { useQuery } from '@apollo/client';
-// import { GET_INTERVIEWS } from 'graphql/queries/interview';
+import { useQuery } from '@apollo/client';
+import { GET_INTERVIEWS } from 'graphql/queries/interview';
 // // import { ButtonLoading } from '@components/ButtonLoading';
 // import PrivateComponent from 'components/utils/PrivateComponent';
 
@@ -13,11 +13,12 @@ export async function getServerSideProps(context) {
 }
 
 const Interviews = () => {
-  // const { data, loading } = useQuery(GET_INTERVIEWS, {
-  //   fetchPolicy: 'cache-and-network',
-  // });
-  const loading = false;
+  const { data, loading } = useQuery(GET_INTERVIEWS, {
+    fetchPolicy: 'cache-and-network',
+  });
+
   if (loading) return <div>Loading....</div>;
+  console.log(data);
 
   return (
     <div>
@@ -26,9 +27,11 @@ const Interviews = () => {
           Entrevistas
         </h1>
         <div className='flex flex-col items-center'>
-          {/* {data.getInterview().map((i) => (
-            <Interview route='admin/interview' key={i.id} interview={i} />
-          ))} */}
+          <div>
+            {/* {data.getInterviewsByInterviewerId.map((i) => (
+              <Interview key={i.id} route='admin/interviews/' interview={i} />
+            ))} */}
+          </div>
         </div>
       </div>
     </div>
