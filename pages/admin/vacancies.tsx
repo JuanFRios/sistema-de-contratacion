@@ -10,6 +10,7 @@ import { GET_VACANCIES } from 'graphql/queries/vacancy';
 import useFormData from 'hooks/useFormData';
 import React, { useState } from 'react';
 import { matchRoles } from 'utils/matchRoles';
+import AdmissionProcess from '../../components/admin/AdmissionProcess';
 
 export async function getServerSideProps(context) {
   return {
@@ -37,10 +38,10 @@ const Vacancies = () => {
   return (
     <div className='flex justify-center'>
       <div className='w-full lg:w-3/5 '>
-        <div className='flex justify-center p-6 font-bold text-3xl'>
+        <div className='flex justify-center pt-12 pb-6 font-bold text-4xl'>
           <p>Vacantes abiertas</p>
         </div>
-        <div className='m-2 flex justify-end'>
+        <div className='m-4 pb-6 flex justify-end text-9xl'>
           <Button
             variant='contained'
             startIcon={<i className='fa-solid fa-plus' />}
@@ -74,7 +75,7 @@ const Vacancy = ({ vacancy, expanded, handleChange }) => {
     setOpenInfoDialog(false);
   };
   return (
-    <div>
+    <div className='py-1 text-lg'>
       <Accordion
         expanded={expanded === vacancy.id}
         onChange={handleChange(vacancy.id)}
@@ -111,25 +112,58 @@ const Vacancy = ({ vacancy, expanded, handleChange }) => {
 };
 
 const ItemContratationProcess = ({ admissionProcess }) => {
+  const [openProcessDialog, setOpenProcessDialog] = useState(false);
+  const closeDialog = () => {
+    setOpenProcessDialog(false);
+  };
   let className;
   let span;
-  if (admissionProcess.status === 'Interview_Phase') {
-    className =
-      'text-sm text-teal-800 font-mono bg-teal-100 inline rounded-full px-2 align-top float-right';
-    span = 'Entrevistas';
+  switch (admissionProcess.status) {
+    case 'Interview_Phase':
+      className =
+        'text-sm text-sky-700 font-mono bg-sky-200 inline rounded-full px-2 align-top float-right';
+      span = 'Entrevistas';
+      break;
+    case 'Hiring_Phase':
+      className =
+        'text-sm text-teal-800 font-mono bg-teal-100 inline rounded-full px-2 align-top float-right';
+      span = 'Contratación';
+      break;
+    case 'Discarded':
+      className =
+        'text-sm text-red-800 font-mono bg-red-400 inline rounded-full px-2 align-top float-right';
+      span = 'Descartado';
+      break;
+    default:
+      className =
+        'text-sm text-sky-700 font-mono bg-sky-200 inline rounded-full px-2 align-top float-right';
+      span = 'Indeterminado';
+      break;
   }
-  if (admissionProcess.status === 'Hiring_Phase') {
-    className =
-      'text-sm text-teal-800 font-mono bg-teal-100 inline rounded-full px-2 align-top float-right';
-    span = 'Contratación';
-  }
+
   return (
-    <div className='flex justify-center text-xl my-1'>
-      <div className='w-full md:w-11/12 h-20 rounded-lg bg-white p-4 flex items-center justify-between'>
-        <p>{admissionProcess.candidate.name}</p>
-        <span className={className}>{span}</span>
+    <>
+      <div className='flex justify-center text-xl my-2'>
+        <div className='w-full md:w-11/12 h-20 rounded-lg bg-white p-4 flex items-center justify-between'>
+          <p>{admissionProcess.candidate.name}</p>
+          <button
+            type='button'
+            onClick={() => {
+              setOpenProcessDialog(true);
+            }}
+          >
+            Ir
+          </button>
+          <span className={className}>{span}</span>
+        </div>
       </div>
-    </div>
+      <Dialog open={openProcessDialog} onClose={closeDialog}>
+        <AdmissionProcess
+          closeDialog={closeDialog}
+          admissionProcessId={admissionProcess.id}
+        />
+      </Dialog>
+    </>
   );
 };
 
