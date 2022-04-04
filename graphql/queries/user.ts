@@ -6,9 +6,11 @@ const GET_CANDIDATES = gql`
       id
       email
       name
+      image
       profile {
         phone
         identification
+        customImage
       }
     }
   }

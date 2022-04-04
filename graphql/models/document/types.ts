@@ -2,7 +2,7 @@ import { gql } from 'apollo-server-micro';
 
 const DocumentTypes = gql`
   type Query {
-    _dummy: String
+    getDocuments: [Document]
   }
 
   enum Enum_DocumentType {
