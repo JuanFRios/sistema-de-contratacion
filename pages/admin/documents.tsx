@@ -119,22 +119,28 @@ const Document = ({ document }) => {
 
 const CreateDocumentDialog = ({ closeDialog }) => {
   const { form, formData, updateFormData } = useFormData(null);
-  const [createDocument, { loading }] = useMutation(CREATE_DOCUMENT, {
-    refetchQueries: [GET_DOCUMENTS],
-  });
+  const [createDocument, { loading }] = useMutation(CREATE_DOCUMENT);
   const submitForm = async (e) => {
     e.preventDefault();
-    console.log(formData);
-    await createDocument({
-      variables: {
-        name: formData.name,
-        description: formData.description,
-        type: formData.type.value,
-        // signature: formData.signature, HABILITAR
-      },
-    });
-    toast.success(`Documento ${formData.name} creado exitosamente`);
-    closeDialog();
+    console.log(createDocument);
+    try {
+      await createDocument({
+        variables: {
+          data: {
+            name: formData.name,
+            description: formData.description,
+            type: formData.type.value,
+            signature: true,
+            // formData.signature, HABILITAR
+          },
+        },
+      });
+      toast.success(`Documento ${formData.name} creado exitosamente`);
+      closeDialog();
+    } catch (error) {
+      toast.error('Error creando el usuario');
+      closeDialog();
+    }
   };
   return (
     <div className='p-10 flex flex-col items-center'>

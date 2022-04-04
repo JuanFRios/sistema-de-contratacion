@@ -6,7 +6,7 @@ const CREATE_DOCUMENT = gql`
   #     id
   #   }
   # }
-  mutation Mutation($data: DocumentCreateInput!) {
+  mutation CreateDocument($data: DocumentCreateInput!) {
     createDocument(data: $data) {
       id
     }
