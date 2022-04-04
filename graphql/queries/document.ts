@@ -9,6 +9,13 @@ const GET_DOCUMENTS = gql`
         name
       }
     }
+    getDocuments {
+      id
+      name
+      description
+      type
+      signature
+    }
   }
 `;
 

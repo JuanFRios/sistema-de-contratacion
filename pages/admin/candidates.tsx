@@ -9,6 +9,7 @@ import useFormData from 'hooks/useFormData';
 import { CREATE_USER_ACCOUNT } from 'graphql/mutations/user';
 import { Button, Dialog } from '@mui/material';
 import { GET_CANDIDATES } from 'graphql/queries/user';
+import Image from 'next/image';
 
 export async function getServerSideProps(context) {
   const options: AxiosRequestConfig = {
@@ -42,14 +43,14 @@ const Candidates = ({ token }) => {
   if (loading) return <div>Loading....</div>;
 
   return (
-    <div>
-      <div>
+    <div className='flex justify-center'>
+      <div className='w-full lg:w-11/12'>
         <div>
-          <h1 className='text-3xl text-slate-900 font-bold text-center m-4'>
+          <h1 className='flex justify-center pt-12 pb-6 font-bold text-4xl'>
             Candidatos
           </h1>
         </div>
-        <div className='m-2 flex justify-end'>
+        <div className='m-4 pb-6 flex justify-end text-9xl'>
           <Button
             variant='contained'
             startIcon={<i className='fa-solid fa-plus' />}
@@ -60,7 +61,7 @@ const Candidates = ({ token }) => {
             Nuevo Candidato
           </Button>
         </div>
-        <div className='flex flex-col items-center'>
+        <div className='flex flex-wrap justify-center'>
           {data.getCandidates.map((c) => (
             <Candidate key={c.id} candidate={c} />
           ))}
@@ -75,19 +76,38 @@ const Candidates = ({ token }) => {
 
 const Candidate = ({ candidate }) => (
   <div>
-    <div className='border-2 border-inherit rounded-lg bg-slate-50 drop-shadow-lg mx-20 my-3 max-w-xl text-slate-900 hover:cursor-pointer hover:bg-slate-100'>
-      <div className='flex flex-col align-center'>
-        <div className='grid grid-cols-3 m-3'>
-          <div className='flex flex-col m-4'>
-            <h2>{candidate.name}</h2>
-            <h2>Documento: {candidate.identification}</h2>
+    <div className='flex p-4'>
+      <div
+        className='border-2 border-inherit rounded-lg bg-slate-50 drop-shadow-lg text-slate-900 p-2
+      hover:cursor-pointer hover:bg-slate-200
+      w-96 h-44'
+      >
+        <div className='p-1 overflow-auto'>
+          <div className='flex items-center pb-2'>
+            <Image
+              // CAMBIAR POR CANDIDATE.CUSTOMIMAGE
+              src={candidate.image}
+              alt='User profile'
+              height={50}
+              width={50}
+              className='rounded-full'
+            />
+            <p className='font-semibold text-xl text-center pl-4 pb-2'>
+              {candidate.name}
+            </p>
           </div>
-          <div className='flex flex-col m-4'>
-            <h2 className='absolute right-0 mx-4'>Correo: {candidate.email}</h2>
-            <h2 className='absolute inset-y-10 right-0 m-4'>
-              Teléfono: {candidate.phone}
-            </h2>
-          </div>
+          <p className='flex font-semibold'>
+            Documento:
+            <p className='ml-2 font-normal'>{candidate.identification}</p>
+          </p>
+          <p className='flex font-semibold'>
+            Correo:
+            <p className='ml-2 font-normal'>{candidate.email}</p>
+          </p>
+          <p className='flex font-semibold'>
+            Teléfono:
+            <p className='ml-2 font-normal'>{candidate.phone}</p>
+          </p>
         </div>
       </div>
     </div>

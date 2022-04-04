@@ -24,7 +24,9 @@ const UploadedDocumentTypes = gql`
   }
 
   type Mutation {
-    createOrUpdateUploadedDocument(data: UploadedDocumentCreateOrUpdateInput!): UploadedDocument
+    createOrUpdateUploadedDocument(
+      data: UploadedDocumentCreateOrUpdateInput!
+    ): UploadedDocument
   }
 `;
 
