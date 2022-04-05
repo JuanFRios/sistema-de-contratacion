@@ -16,11 +16,12 @@ import { toast } from 'react-toastify';
 import { GET_REQUIRED_DOCUMENTS } from 'graphql/queries/document';
 import { CREATE_OR_UPDATE_DOCUMENT_UPLOAD } from 'graphql/mutations/document';
 import {
+  findImage,
   DocumentType,
   steps,
   AdmissionStatus,
   decodeStep,
-} from '../../utils/admissionProcess';
+} from '@utils/admissionProcess';
 
 const AdmissionProcess = ({ closeDialog, admissionProcessId }) => {
   const { data: admissionProcess, loading } = useQuery(
@@ -37,31 +38,27 @@ const AdmissionProcess = ({ closeDialog, admissionProcessId }) => {
 
   if (loading) return <div>Loading...</div>;
 
-  let image =
-    'https://res.cloudinary.com/proyecto-integrador-udea-2022/image/upload/v1647726660/Screenshot_from_2022-03-19_16-50-20_kqfsoy.png';
-  if (
-    admissionProcess.getAdmissionProcess.candidate.profile &&
-    admissionProcess.getAdmissionProcess.candidate.profile.customImage
-  ) {
-    image = admissionProcess.getAdmissionProcess.candidate.profile.customImage;
-  } else if (admissionProcess.getAdmissionProcess.candidate.image) {
-    image = admissionProcess.getAdmissionProcess.candidate.image;
-  }
+  const image = findImage(admissionProcess.getAdmissionProcess.candidate);
 
   return (
     <div className='p-10 flex flex-col justify-between w-full h-max-screen'>
-      <div className='flex items-center w-full'>
+      <div className='flex items-center justify-end w-full'>
+        <p className='mr-3 text-sky-700 md:text-xl'>
+          {admissionProcess.getAdmissionProcess.candidate.name}
+        </p>
         <Image
           src={image}
           alt='Perfil del candidato'
-          height={60}
-          width={60}
+          height={40}
+          width={40}
           className='rounded-full'
         />
-        <p>{admissionProcess.getAdmissionProcess.candidate.name}</p>
       </div>
       <div className='flex flex-col'>
-        <div>AdmissionProcess {admissionProcessId}</div>
+        <div className='w-full text-center text-xl md:text-2xl font-semibold my-4'>
+          Proceso de admisión para{' '}
+          {admissionProcess.getAdmissionProcess.vacancy.position}
+        </div>
         <div className='h-full overflow-auto'>
           <BodyAdmissionProcess
             admissionProcess={admissionProcess.getAdmissionProcess}
@@ -120,11 +117,6 @@ const BodyAdmissionProcess = ({ admissionProcess }) => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
 
-  // const handleHire = async () => {
-  //   await ChangeStatus(AdmissionStatus.CONTRATADO);
-  //   setActiveStep(decodeStep(AdmissionStatus.CONTRATADO));
-  // };
-
   const handleDiscard = async () => {
     await ChangeStatus(AdmissionStatus.DESCARTADO);
     setActiveStep(decodeStep(AdmissionStatus.CONTRATADO));
@@ -161,8 +153,7 @@ const BodyAdmissionProcess = ({ admissionProcess }) => {
       </Stepper>
       {activeStep === 0 && (
         <>
-          <Typography sx={{ mt: 2, mb: 1 }}>Step {activeStep + 1}</Typography>
-          <div className='h-fit overflow-auto'>
+          <div className='h-fit overflow-auto mt-4'>
             <InterviewDeatail />
             <InterviewDeatail />
             <InterviewDeatail />
@@ -218,7 +209,8 @@ const DocumentsHire = ({ admissionProcess }) => {
             <DocumentInput
               key={document.id}
               document={document}
-              admissionProcessId={admissionProcess.id}
+              admissionProcess={admissionProcess}
+              showInput
             />
           );
         }
@@ -233,7 +225,8 @@ const DocumentsHire = ({ admissionProcess }) => {
             <DocumentInput
               key={document.id}
               document={document}
-              admissionProcessId={admissionProcess.id}
+              admissionProcess={admissionProcess}
+              showInput={false}
             />
           );
         }
@@ -243,17 +236,22 @@ const DocumentsHire = ({ admissionProcess }) => {
   );
 };
 
-const DocumentInput = ({ document, admissionProcessId }) => {
+const DocumentInput = ({ document, admissionProcess, showInput }) => {
   console.log('object');
   const [createDocument] = useMutation(CREATE_OR_UPDATE_DOCUMENT_UPLOAD, {
     refetchQueries: [GET_ADMISSIONPROCESS_BY_CANDIDATE],
   });
+
+  const uploaded = admissionProcess.uploadDocumentation.filter(
+    (u) => u.documentId === document.id
+  );
+  console.log(uploaded);
   const successCallback = async (e) => {
     console.log(e);
     await createDocument({
       variables: {
         data: {
-          admissionProcessId,
+          admissionProcessId: admissionProcess.id,
           fileUrl: e.info.url,
           documentId: document.id,
         },
@@ -270,16 +268,19 @@ const DocumentInput = ({ document, admissionProcessId }) => {
       <h6 className='mx-4 my-2'>
         {document.name} {document.signature ? '*' : ''}:
       </h6>
-      <div className='bg-slate-400 hover:border-gray-400 border-2 mx-2 rounded-lg text-center cursor-pointer'>
-        <FileUpload
-          folder='documents'
-          text='Elegir'
-          resourceType='auto'
-          successCallback={successCallback}
-          errorCallback={errorCallback}
-        />
-        <i className='fa-solid fa-file-arrow-up text-2xl text-slate-800 mx-4' />
-      </div>
+      {uploaded.length > 0 && <div>Descargar</div>}
+      {showInput && (
+        <div className='bg-slate-400 hover:border-gray-400 border-2 mx-2 rounded-lg text-center cursor-pointer'>
+          <FileUpload
+            folder='documents'
+            text='Elegir'
+            resourceType='auto'
+            successCallback={successCallback}
+            errorCallback={errorCallback}
+          />
+          <i className='fa-solid fa-file-arrow-up text-2xl text-slate-800 mx-4' />
+        </div>
+      )}
     </div>
   );
 };

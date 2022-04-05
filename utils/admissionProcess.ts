@@ -33,3 +33,14 @@ export const decodeStep = (status) => {
       return 0;
   }
 };
+
+export const findImage = (user) => {
+  let image =
+    'https://res.cloudinary.com/proyecto-integrador-udea-2022/image/upload/v1647726660/Screenshot_from_2022-03-19_16-50-20_kqfsoy.png';
+  if (user.profile && user.profile.customImage) {
+    image = user.profile.customImage;
+  } else if (user.image) {
+    image = user.image;
+  }
+  return image;
+};

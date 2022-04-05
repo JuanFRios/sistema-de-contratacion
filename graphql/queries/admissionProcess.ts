@@ -28,6 +28,9 @@ const GET_ADMISSIONPROCESS_BY_CANDIDATE = gql`
         notes
         status
       }
+      vacancy {
+        position
+      }
       uploadDocumentation {
         document {
           name
