@@ -19,4 +19,18 @@ const GET_DOCUMENTS = gql`
   }
 `;
 
-export { GET_DOCUMENTS };
+const GET_REQUIRED_DOCUMENTS = gql`
+  query Query {
+    getDocuments {
+      id
+      name
+      description
+      type
+      signature
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
+export { GET_DOCUMENTS, GET_REQUIRED_DOCUMENTS };

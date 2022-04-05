@@ -5,6 +5,11 @@ export enum AdmissionStatus {
   DESCARTADO = 'Discarded',
 }
 
+export enum DocumentType {
+  COMPANY = 'Company',
+  CANDIDATE = 'Candidate',
+}
+
 export const steps = [
   {
     label: 'Fase de entrevistas',

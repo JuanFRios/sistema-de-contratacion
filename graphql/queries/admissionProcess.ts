@@ -3,6 +3,7 @@ import { gql } from '@apollo/client';
 const GET_ADMISSIONPROCESS_BY_CANDIDATE = gql`
   query Query($where: AdmissionProcessFilterId!) {
     getAdmissionProcess(where: $where) {
+      id
       candidate {
         name
         profile {
@@ -26,6 +27,18 @@ const GET_ADMISSIONPROCESS_BY_CANDIDATE = gql`
         }
         notes
         status
+      }
+      uploadDocumentation {
+        document {
+          name
+          type
+          signature
+          description
+          id
+        }
+        fileUrl
+        documentId
+        id
       }
     }
   }
