@@ -6,6 +6,7 @@ import { UserResolvers } from 'graphql/models/users/resolvers';
 import { VacancyResolvers } from 'graphql/models/vacancy/resolvers';
 import { ProfileResolvers } from 'graphql/models/profile/resolvers';
 import { UploadedDocumentResolvers } from 'graphql/models/uploadedDocument/resolvers';
+import { ChartResolvers } from 'graphql/models/chart/resolvers';
 
 export const resolvers = [
   DocumentResolvers,
@@ -16,4 +17,5 @@ export const resolvers = [
   InterviewResolvers,
   ProfileResolvers,
   UploadedDocumentResolvers,
+  ChartResolvers
 ];
