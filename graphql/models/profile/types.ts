@@ -5,9 +5,11 @@ const ProfileTypes = gql`
     phone: StringEditField
     identification: StringEditField
     address: StringEditField
+    customImage: String
   }
 
   type Profile {
+    id: ID!
     user: User!
     phone: String!
     identification: String!
