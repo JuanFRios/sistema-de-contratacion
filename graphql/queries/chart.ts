@@ -1,11 +1,10 @@
 import { gql } from '@apollo/client';
 
 const GET_CHART_DATA = gql`
-  query GetChartData {
+  query Series {
     getChartData {
       series {
         data
-        name
       }
       categories
     }

@@ -24,7 +24,7 @@ const Report = () => {
   const [options, setOptions] = useState({
     chart: {
       type: 'bar',
-      height: 350,
+      height: 400,
     },
     plotOptions: {
       bar: {
@@ -55,11 +55,11 @@ const Report = () => {
   if (loading) return <div>Loading...</div>;
 
   return (
-    <div>
+    <div className='place-content-center'>
       <h1 className='text-3xl text-slate-900 font-bold text-center m-4'>
         Cantidad de documentos pendientes por cada proceso de contratación
       </h1>
-      <div className='w-full'>
+      <div className='w-11/12'>
         <ReactApexChart
           options={options}
           series={series}

@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import { GET_INTERVIEWS } from 'graphql/queries/interview';
+import { GET_INTERVIEW } from 'graphql/queries/interview';
 import { useQuery } from '@apollo/client';
 import { matchRoles } from 'utils/matchRoles';
 
@@ -13,7 +13,7 @@ export async function getServerSideProps(context) {
 }
 
 const Interview = () => {
-  const { data, loading } = useQuery(GET_INTERVIEWS, {
+  const { data, loading } = useQuery(GET_INTERVIEW, {
     fetchPolicy: 'cache-and-network',
   });
 
