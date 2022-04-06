@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 import React from 'react';
 import { matchRoles } from 'utils/matchRoles';
 import { Tooltip } from '@mui/material';
@@ -14,17 +15,17 @@ export async function getServerSideProps(context) {
   };
 }
 
+const successCallback = (e) => {
+  console.log(e);
+  // setFileUrl(e.info.url);
+};
+const errorCallback = () => {
+  toast.error('error uploading file');
+};
+
 const Documents = () => {
   const { form, formData, updateFormData } = useFormData(null);
   //   const [fileUrl, setFileUrl] = useState<string>(null);
-
-  const successCallback = (e) => {
-    console.log(e);
-    // setFileUrl(e.info.url);
-  };
-  const errorCallback = () => {
-    toast.error('error uploading file');
-  };
 
   const { data, loading } = useQuery(GET_DOCUMENTS);
 
@@ -61,7 +62,11 @@ const Documents = () => {
           </p>
           <div>
             {data.getUploadedDocuments.map((document) => (
-              <UploadedDocument key={document.id} document={document} />
+              <UploadedDocument
+                key={document.id}
+                document={document}
+                button={false}
+              />
             ))}
           </div>
 
@@ -71,7 +76,11 @@ const Documents = () => {
           </p>
           <div>
             {data.getUploadedDocuments.map((document) => (
-              <UploadedDocument key={document.id} document={document} />
+              <UploadedDocument
+                key={document.id}
+                document={document}
+                button={false}
+              />
             ))}
           </div>
         </div>
@@ -79,30 +88,13 @@ const Documents = () => {
           <h1>ARCHIVOS QUE DEBES CARGAR: </h1>
           <div className='flex flex-col'>
             <div className='flex font-bold'>
-              <h6 className='mx-4 my-2'>Cédula:</h6>
-              <div className='bg-slate-400 hover:border-gray-400 border-2 mx-2 rounded-lg text-center cursor-pointer'>
-                <FileUpload
-                  folder='documents'
-                  text='Elegir'
-                  resourceType='auto'
-                  successCallback={successCallback}
-                  errorCallback={errorCallback}
+              {data.getUploadedDocuments.map((document) => (
+                <UploadedDocument
+                  key={document.id}
+                  document={document}
+                  button={false}
                 />
-                <i className='fa-solid fa-file-arrow-up text-2xl text-slate-800 mx-4' />
-              </div>
-            </div>
-            <div className='flex my-4 font-bold'>
-              <h6 className='mx-4 my-2'>Acta de graduación:</h6>
-              <div className='bg-slate-400 hover:border-gray-400 border-2 rounded-lg text-center cursor-pointer'>
-                <FileUpload
-                  folder='documents'
-                  text='Elegir'
-                  resourceType='raw'
-                  successCallback={successCallback}
-                  errorCallback={errorCallback}
-                />
-                <i className='fa-solid fa-file-arrow-up text-2xl text-slate-800 mx-4 ' />
-              </div>
+              ))}
             </div>
           </div>
         </div>
@@ -138,9 +130,25 @@ const Documents = () => {
   );
 };
 
-const UploadedDocument = ({ document }) => (
+const UploadedDocument = ({ document, button }) => (
   <div>
-    <h6 className=' my-4'>· {document.name}</h6>
+    <h6 className=' my-4'>· {document.name}</h6>;
+    {(() => {
+      if (button) {
+        return (
+          <div className='bg-slate-400 hover:border-gray-400 border-2 rounded-lg text-center cursor-pointer'>
+            <FileUpload
+              folder='documents'
+              text='Elegir'
+              resourceType='raw'
+              successCallback={successCallback}
+              errorCallback={errorCallback}
+            />
+            <i className='fa-solid fa-file-arrow-up text-2xl text-slate-800 mx-4 ' />
+          </div>
+        );
+      }
+    })()}
   </div>
 );
 

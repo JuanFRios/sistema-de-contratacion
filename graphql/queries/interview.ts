@@ -1,11 +1,10 @@
 import { gql } from '@apollo/client';
 
-const GET_INTERVIEWS = gql`
-  query GetInterviews {
+const GET_INTERVIEW = gql`
+  query GetInterview($where: InterviewFilterId!) {
     getInterview(where: $where) {
-      id
       name
-      date
+      id
       admissionProcess {
         vacancy {
           position
@@ -14,8 +13,11 @@ const GET_INTERVIEWS = gql`
           name
         }
       }
+      date
+      meetingDetail
+      notes
     }
   }
 `;
 
-export { GET_INTERVIEWS };
+export { GET_INTERVIEW };
