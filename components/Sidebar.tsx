@@ -67,7 +67,7 @@ const SidebarBig = ({ chil }: any) => (
         </div>
         <div className='w-2/3 my-4'>
           <div className='border-2 mx-4 rounded-full border-slate-300 hover:border-blue-400'>
-            <Link href='/'>
+            <Link href='/users/updateUser'>
               <div className='w-full hover:cursor-pointer flex justify-center'>
                 <i className='fa-solid fa-pen-to-square my-1' />
                 <span className='ml-2'>Editar perfil</span>

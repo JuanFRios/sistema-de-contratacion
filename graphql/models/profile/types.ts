@@ -2,12 +2,13 @@ import { gql } from 'apollo-server-micro';
 
 const ProfileTypes = gql`
   input UserUpdateInput {
-    phone: StringEditField
-    identification: StringEditField
-    address: StringEditField
+    phone: String
+    identification: String
+    address: String
   }
 
   type Profile {
+    id: ID!
     user: User!
     phone: String!
     identification: String!
