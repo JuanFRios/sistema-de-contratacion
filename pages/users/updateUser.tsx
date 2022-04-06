@@ -1,16 +1,17 @@
 import { useMutation, useQuery } from '@apollo/client';
-import { UPDATE_USER_ACCOUNT } from 'graphql/mutations/user';
+import {
+  UPDATE_PROFILE_IMAGE,
+  UPDATE_USER_ACCOUNT,
+} from 'graphql/mutations/user';
 import { GET_USER_PROFILE } from 'graphql/queries/user';
 import useFormData from 'hooks/useFormData';
 import { useSession } from 'next-auth/react';
-import Link from 'next/link';
-import router, { useRouter } from 'next/router';
 import React from 'react';
 import { toast } from 'react-toastify';
 import { matchRoles } from 'utils/matchRoles';
 import Image from 'next/image';
 import FileUpload from '@components/FileUpload';
-// import Link from 'next/link';
+import { ButtonLoading } from '@components/utils/ButtonLoading';
 
 export async function getServerSideProps(context) {
   return {
@@ -20,27 +21,36 @@ export async function getServerSideProps(context) {
 
 const UpdateUser = () => {
   const { data: session }: any = useSession();
-  console.log('sesion', session);
 
-  const { data: userData } = useQuery(GET_USER_PROFILE, {
+  const { data: userData, loading } = useQuery(GET_USER_PROFILE, {
     variables: {
       email: session.user.email,
     },
   });
 
-  //   const [updateImage] = useMutation(UPDATE_PROFILE_IMAGE, {
-  //     refetchQueries: [GET_USER_PROFILE],
-  //   });
-
-  //   if (loading) return <div>Loading...</div>;
-  //   const router = useRouter();
-  const { form, formData, updateFormData } = useFormData(null);
-  const [updateUser, { data, loading }] = useMutation(UPDATE_USER_ACCOUNT, {
+  const [updateProfileImage] = useMutation(UPDATE_PROFILE_IMAGE, {
     refetchQueries: [GET_USER_PROFILE],
   });
+  const [updateUser] = useMutation(UPDATE_USER_ACCOUNT, {
+    refetchQueries: [GET_USER_PROFILE],
+  });
+  const { form, formData, updateFormData } = useFormData(userData);
+
+  const lalalal = async (e) => {
+    await updateProfileImage({
+      variables: {
+        user: userData.getUser.id,
+        image: e.info.url,
+      },
+    });
+    toast.success('La imagen se actualizó correctamente');
+  };
+  const errorCallback = () => {
+    toast.error('Error actualizando la imagen');
+  };
 
   const submitForm = async (e) => {
-    // e.preventDefault();
+    e.preventDefault();
     await updateUser({
       variables: {
         user: userData.getUser.profile.id,
@@ -48,98 +58,94 @@ const UpdateUser = () => {
           phone: formData.phone,
           identification: formData.identification,
           address: formData.address,
-          customImage: e.info.url,
         },
       },
     });
     toast.success('Perfil modificado con éxito');
   };
-  const errorCallback = () => {
-    toast.error('error uploading file');
-  };
 
-  //   if (loading) return <div>Loading....</div>;
+  if (loading) return <div>Loading....</div>;
 
   return (
-    <div className='text-slate-900 '>
+    <div className='flex flex-col w-full text-slate-900'>
       {/* {data && <div>data loaded</div>} */}
       <div className='flex flex-col font-bold place-items-center text-4xl m-8 mx-4 my-4 border-2 border-inherit rounded-lg bg-slate-50 drop-shadow-lg'>
         <h1 className='mx-4 my-4'>Editar perfil</h1>
       </div>
-      <div className='flex flex-col w-full'>
-        <div className='w-full flex flex-col items-center p-10'>
-          <h1 className='text-2xl font-bold text-gray-900 my-4'>
-            User Profile
-          </h1>
-          <Image
-            src={session.user.profile?.customImage ?? session.user.Image}
-            alt='User Profile'
-            height={120}
-            width={120}
-            className='rounded-full'
-          />
-          <div className='my-2'>
-            <FileUpload
-              errorCallback={errorCallback}
-              successCallback={submitForm}
-              folder='profile-images'
-              resourceType='image'
-              text='Change Image'
+      <div className='flex justify-center items-center mt-12'>
+        <div className='flex justify-center '>
+          <div className='flex-col items-center mr-12'>
+            <Image
+              src={
+                userData.getUser.profile?.customImage ?? userData.getUser.image
+              }
+              alt='User Profile'
+              height={200}
+              width={200}
+              className='rounded-full'
             />
+            <div className='my-2 text-center text-xl font-normal hover:text-blue-600 '>
+              <FileUpload
+                errorCallback={errorCallback}
+                successCallback={lalalal}
+                folder='profile-images'
+                resourceType='image'
+                text='Cambiar imagen'
+              />
+            </div>
           </div>
         </div>
-        {/* <form
+
+        <form
           ref={form}
           onChange={updateFormData}
           onSubmit={submitForm}
-          className='m-8 my-8 mx-8'
-        > */}
-        <div className='flex m-8 '>
-          <span className='mx-4 font-bold'>Vacante</span>
-          {/* <DropdownComponent option='una vacante' variables='Vacante 1' /> */}
-        </div>
-        <div className='flex m-8 '>
-          <span className='mx-4 font-bold'>Candidato</span>
-          {/* <DropdownComponent option='un candidato' variables='Candidato1' /> */}
-        </div>
-        <label className='flex m-8' htmlFor='date'>
-          <span className='mx-4 font-bold'>Fecha</span>
-          <input
-            className='rounded-lg border-2 border-slate-400 hover:border-slate-800'
-            name='date'
-            type='date'
-          />
-        </label>
-        <label className='flex m-8' htmlFor='hour'>
-          <span className='mx-4 font-bold'>Hora</span>
-          <input
-            className='rounded-lg border-2 border-slate-400 hover:border-slate-800'
-            name='hour'
-            type='time'
-          />
-        </label>
-        <label className='flex m-8' htmlFor='details'>
-          <span className='mx-4 font-bold'>Detalles</span>
-          <input
-            className='rounded-lg border-2 border-slate-400 hover:border-slate-800'
-            name='details'
-            type='text'
-          />
-        </label>
-        <label className='flex m-8' htmlFor='place'>
-          <span className='mx-4 font-bold'>Lugar</span>
-          <input
-            className='rounded-lg border-2 border-slate-400 hover:border-slate-800'
-            name='place'
-            type='text'
-          />
-        </label>
-        {/* </form> */}
-        <Link href='/admin/interviews' passHref>
-          <div className='text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 max-w-min hover:cursor-pointer absolute bottom-10 right-10 m-4 '>
-            Guardar
+          className='m-8 flex flex-col'
+        >
+          <label
+            className='flex items-center justify-between my-4 font-semibold text-gray-900 duration-300 peer-focus:left-0 peer-focus:text-blue-600'
+            htmlFor='place'
+          >
+            <span className='mx-4 font-bold text-2xl'>Identificación</span>
+            <input
+              className='py-2.5 text-xl font-normal px-3 text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-non focus:outline-none focus:ring-0 focus:border-blue-600 '
+              name='identification'
+              type='text'
+              defaultValue={userData.getUser.profile?.identification}
+              required
+            />
+          </label>
+          <label
+            className='flex items-center justify-between my-4 font-semibold text-gray-900 duration-300 peer-focus:left-0 peer-focus:text-blue-600'
+            htmlFor='details'
+          >
+            <span className='mx-4 font-bold text-2xl'>Telefono</span>
+            <input
+              className='py-2.5 text-xl font-normal px-3 text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-non focus:outline-none focus:ring-0 focus:border-blue-600'
+              name='phone'
+              type='text'
+              onChange={updateFormData}
+              defaultValue={userData.getUser.profile?.phone}
+              required
+            />
+          </label>
+          <label
+            className='flex items-center justify-between my-4 font-semibold text-gray-900 duration-300 peer-focus:left-0 peer-focus:text-blue-600'
+            htmlFor='place'
+          >
+            <span className='mx-4 font-bold text-2xl'>Dirección</span>
+            <input
+              className='py-2.5 text-xl font-normal px-3 text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-non focus:outline-none focus:ring-0 focus:border-blue-600'
+              name='address'
+              type='text'
+              defaultValue={userData.getUser.profile?.address}
+              required
+            />
+          </label>
+          <div className='w-full flex justify-center mt-4'>
+            <ButtonLoading isSubmit text='Guardar' loading={loading} />
           </div>
-        </Link>
+        </form>
       </div>
     </div>
   );
