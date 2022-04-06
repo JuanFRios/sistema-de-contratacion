@@ -10,6 +10,8 @@ import { CREATE_USER_ACCOUNT } from 'graphql/mutations/user';
 import { Button, Dialog } from '@mui/material';
 import { GET_CANDIDATES } from 'graphql/queries/user';
 import Image from 'next/image';
+import { GET_SIMPLE_VACANCIES } from 'graphql/queries/vacancy';
+import Input from '@components/utils/Input';
 
 export async function getServerSideProps(context) {
   const options: AxiosRequestConfig = {
@@ -117,6 +119,12 @@ const Candidate = ({ candidate }) => (
 const CreateCandidateDialog = ({ closeDialog, token }) => {
   const { form, formData, updateFormData } = useFormData(null);
   const [createUser, { loading }] = useMutation(CREATE_USER_ACCOUNT);
+  const { data: vacancies, loading: loadingVacancies } = useQuery(
+    GET_SIMPLE_VACANCIES,
+    {
+      fetchPolicy: 'cache-and-network',
+    }
+  );
 
   const submitForm = async (e) => {
     e.preventDefault();
@@ -143,12 +151,16 @@ const CreateCandidateDialog = ({ closeDialog, token }) => {
             name: userCreateResponse.data.name,
             image: userCreateResponse.data.picture,
             auth0Id: userCreateResponse.data.user_id,
-            vacancyId: 'cl0y7uvp80032uou14bbvopvj',
-            role: formData.role,
+            vacancyId: formData.vacancyId,
+            role: 'Candidate',
+            phone: formData.phone,
+            identification: formData.identification,
+            address: formData.address,
           },
         },
       });
-      toast.success(`Usuario creado correctamente con la clave ${password}`, {
+      console.log(`${password}*`);
+      toast.success(`Usuario creado correctamente con la clave ${password}*`, {
         autoClose: false,
       });
       closeDialog();
@@ -157,6 +169,10 @@ const CreateCandidateDialog = ({ closeDialog, token }) => {
       closeDialog();
     }
   };
+
+  if (loadingVacancies) {
+    return <div>loading...</div>;
+  }
 
   return (
     <div className='p-5 flex flex-col items-center'>
@@ -167,23 +183,47 @@ const CreateCandidateDialog = ({ closeDialog, token }) => {
         onSubmit={submitForm}
         className='flex flex-col items-start'
       >
-        <label htmlFor='email'>
-          <span className='font-bold mx-2'>Email:</span>
-          <input
-            name='email'
-            placeholder='test@test.com'
+        <Input
+          name='email'
+          type='text'
+          placeholder='Escribe el email del usuario'
+          text='E-mail'
+          required
+        />
+        <div className='flex flex-col md:flex-row'>
+          <Input
+            name='phone'
+            type='text'
+            placeholder='Escribe el número telefónico'
+            text='Teléfono'
             required
-            type='email'
           />
-        </label>
-        <label htmlFor='role' className='my-2'>
-          <span className='font-bold mx-2'>Rol:</span>
-          <select name='role' required>
+          <Input
+            name='identification'
+            type='text'
+            placeholder='Escribe el número de identificación'
+            text='Identificación'
+            required
+          />
+        </div>
+        <Input
+          name='address'
+          type='text'
+          placeholder='Escribe la dirección'
+          text='Dirección'
+          required
+        />
+        <label htmlFor='vacancyId' className='my-2'>
+          <span className='font-bold mx-2'>Vacante:</span>
+          <select name='vacancyId' required>
             <option disabled selected>
-              Seleccione un rol
+              Seleccione una vacante
             </option>
-            <option>Admin</option>
-            <option>Candidate</option>
+            {vacancies.getVacancies.map((v) => (
+              <option value={v.id} key={v.id}>
+                {v.position}
+              </option>
+            ))}
           </select>
         </label>
         <div className='w-full flex justify-center'>

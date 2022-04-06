@@ -25,12 +25,31 @@ const GET_VACANCIES = gql`
   }
 `;
 
+const GET_SIMPLE_VACANCIES = gql`
+  query GetVacancies {
+    getVacancies {
+      id
+      position
+    }
+  }
+`;
+
 const GET_VACANCIES_BY_CANDIDATE = gql`
   query Query($where: VacancyCandidateId!) {
     getVacancyByCandidate(where: $where) {
       position
       id
       admissionProcesess {
+        status
+        candidate {
+          id
+          name
+        }
+        uploadDocumentation {
+          id
+          documentId
+          fileUrl
+        }
         interviews {
           id
           name
@@ -46,4 +65,4 @@ const GET_VACANCIES_BY_CANDIDATE = gql`
   }
 `;
 
-export { GET_VACANCIES, GET_VACANCIES_BY_CANDIDATE };
+export { GET_VACANCIES, GET_VACANCIES_BY_CANDIDATE, GET_SIMPLE_VACANCIES };
