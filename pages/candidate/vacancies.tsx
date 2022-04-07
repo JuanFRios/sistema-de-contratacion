@@ -1,10 +1,15 @@
-import { useQuery } from '@apollo/client';
+/* eslint-disable prefer-destructuring */
+import { useQuery, useMutation } from '@apollo/client';
 import { GET_VACANCIES_BY_CANDIDATE } from 'graphql/queries/vacancy';
 import React, { useState } from 'react';
 import { matchRoles } from 'utils/matchRoles';
 import { useSession } from 'next-auth/react';
 import { Accordion, AccordionDetails, AccordionSummary } from '@mui/material';
-import { AdmissionStatus } from '@utils/admissionProcess';
+import { AdmissionStatus, DocumentType } from '@utils/admissionProcess';
+import { GET_REQUIRED_DOCUMENTS } from 'graphql/queries/document';
+import { CREATE_OR_UPDATE_DOCUMENT_UPLOAD } from 'graphql/mutations/document';
+import { toast } from 'react-toastify';
+import FileUpload from '@components/FileUpload';
 
 export async function getServerSideProps(context) {
   return {
@@ -33,13 +38,15 @@ const Vacancies = () => {
     return <div>loading...</div>;
   }
 
-  const admissionProcess = data.getVacancyByCandidate.admissionProcesess.filter(
+  let admissionProcess = data.getVacancyByCandidate.admissionProcesess.filter(
     (a) => a.candidate.id === idUser
   );
 
+  admissionProcess = admissionProcess[0];
+
   let className;
   let span;
-  switch (admissionProcess[0].status) {
+  switch (admissionProcess.status) {
     case AdmissionStatus.FASE_ENTREVISTAS:
       className =
         'text-sm text-sky-700 font-mono bg-sky-200 inline rounded-full px-2 align-top float-right';
@@ -89,14 +96,133 @@ const Vacancies = () => {
                 </div>
               </AccordionSummary>
               <AccordionDetails className='bg-slate-100'>
-                <p className='w-full text-center'>
-                  Aún no hay postulados para esta vacante
-                </p>
+                {admissionProcess.status ===
+                  AdmissionStatus.FASE_ENTREVISTAS && (
+                  <Interviews interviews={admissionProcess.interviews} />
+                )}
+                {admissionProcess.status ===
+                  AdmissionStatus.FASE_CONTRATACION && (
+                  <Documentation admissionProcess={admissionProcess} />
+                )}
+                {admissionProcess.status === AdmissionStatus.DESCARTADO && (
+                  <p className='w-full text-center'>
+                    Tu proceso de admisión ha sido terminado, postúlate a
+                    futuras vacantes
+                  </p>
+                )}
               </AccordionDetails>
             </Accordion>
           </div>
         </div>
       </div>
+    </div>
+  );
+};
+
+const Interviews = ({ interviews }) => {
+  console.log(interviews);
+  return (
+    <div>
+      {interviews.length === 0 && (
+        <p className='w-full text-center'>
+          Aún no hay postulados para esta vacante
+        </p>
+      )}
+      {interviews.map((i) => (
+        <Interview key={i.id} interview={i} />
+      ))}
+    </div>
+  );
+};
+
+const Documentation = ({ admissionProcess }) => {
+  const { data: documents, loading } = useQuery(GET_REQUIRED_DOCUMENTS);
+  console.log(documents, loading);
+  if (loading) {
+    return <div>loading..</div>;
+  }
+  console.log(admissionProcess.uploadDocumentation);
+  return (
+    <div>
+      {documents.getDocuments.map((document) => {
+        if (document.type === DocumentType.CANDIDATE) {
+          return (
+            <DocumentInput
+              key={document.id}
+              document={document}
+              admissionProcess={admissionProcess}
+              showInput={
+                (document.type === DocumentType.COMPANY &&
+                  document.signature) ||
+                document.type === DocumentType.CANDIDATE
+              }
+            />
+          );
+        }
+        return null;
+      })}
+    </div>
+  );
+};
+
+const Interview = ({ interview }) => {
+  console.log(interview);
+  return (
+    <div>
+      <p>{interview.name}</p>
+      <p>{interview.date}</p>
+      <p>{interview.meetingDetail}</p>
+      <p>{interview.status}</p>
+      <p>{interview.interviewer.name}</p>
+    </div>
+  );
+};
+
+const DocumentInput = ({ document, admissionProcess, showInput }) => {
+  console.log('object');
+  const [createDocument] = useMutation(CREATE_OR_UPDATE_DOCUMENT_UPLOAD, {
+    refetchQueries: [GET_VACANCIES_BY_CANDIDATE],
+  });
+
+  const uploaded = admissionProcess.uploadDocumentation.filter(
+    (u) => u.documentId === document.id
+  );
+  console.log(uploaded);
+  const successCallback = async (e) => {
+    console.log(e);
+    await createDocument({
+      variables: {
+        data: {
+          admissionProcessId: admissionProcess.id,
+          fileUrl: e.info.url,
+          documentId: document.id,
+        },
+      },
+    });
+    toast.success('document created ok');
+    // setFileUrl(e.info.url);
+  };
+  const errorCallback = () => {
+    toast.error('error uploading file');
+  };
+  return (
+    <div className='flex font-bold'>
+      <h6 className='mx-4 my-2'>
+        {document.name} {document.signature ? '*' : ''}:
+      </h6>
+      {uploaded.length > 0 && <div>Descargar</div>}
+      {showInput && (
+        <div className='bg-slate-400 hover:border-gray-400 border-2 mx-2 rounded-lg text-center cursor-pointer'>
+          <FileUpload
+            folder='documents'
+            text='Elegir'
+            resourceType='auto'
+            successCallback={successCallback}
+            errorCallback={errorCallback}
+          />
+          <i className='fa-solid fa-file-arrow-up text-2xl text-slate-800 mx-4' />
+        </div>
+      )}
     </div>
   );
 };

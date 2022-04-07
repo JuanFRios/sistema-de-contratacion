@@ -8,6 +8,7 @@ import { toast } from 'react-toastify';
 import { ButtonLoading } from '@components/utils/ButtonLoading';
 import { CREATE_DOCUMENT } from 'graphql/mutations/document';
 import LoadingComponent from '@components/utils/LoadingComponent';
+import Input from '@components/utils/Input';
 
 export async function getServerSideProps(context) {
   return {
@@ -130,16 +131,15 @@ const CreateDocumentDialog = ({ closeDialog }) => {
           data: {
             name: formData.name,
             description: formData.description,
-            type: formData.type.value,
-            signature: true,
-            // formData.signature, HABILITAR
+            type: formData.type,
+            signature: formData.signature === 'true',
           },
         },
       });
       toast.success(`Documento ${formData.name} creado exitosamente`);
       closeDialog();
     } catch (error) {
-      toast.error('Error creando el usuario');
+      toast.error('Error creando el documento');
       closeDialog();
     }
   };
@@ -154,28 +154,20 @@ const CreateDocumentDialog = ({ closeDialog }) => {
         onSubmit={submitForm}
         className='flex flex-col'
       >
-        <label
-          htmlFor='name'
-          className='my-4 font-semibold text-gray-900 duration-300 peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500'
-        >
-          <span>Nombre del Documento:</span>
-          <input
-            name='name'
-            required
-            className='py-2.5 px-0 w-full text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-non focus:outline-none focus:ring-0 focus:border-blue-600 peer'
-          />
-        </label>
-        <label
-          htmlFor='description'
-          className='my-4 font-semibold text-gray-900 duration-300 peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500'
-        >
-          <span>Descripción del Documento:</span>
-          <input
-            name='description'
-            required
-            className='py-2.5 px-0 w-full text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-non focus:outline-none focus:ring-0 focus:border-blue-600 peer'
-          />
-        </label>
+        <Input
+          name='name'
+          type='text'
+          placeholder='Escribe el nombre del documento'
+          text='Nombre'
+          required
+        />
+        <Input
+          name='description'
+          type='text'
+          placeholder='Escribe la descripción'
+          text='Descripción'
+          required
+        />
         <label
           htmlFor='type'
           className='my-4 font-semibold text-gray-900 duration-300 peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500'
@@ -190,6 +182,22 @@ const CreateDocumentDialog = ({ closeDialog }) => {
             </option>
             <option value='Company'>Empresa</option>
             <option value='Candidate'>Candidato</option>
+          </select>
+        </label>
+        <label
+          htmlFor='signature'
+          className='my-4 font-semibold text-gray-900 duration-300 peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500'
+        >
+          <select
+            name='signature'
+            required
+            className='py-2.5 px-0 bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block '
+          >
+            <option disabled selected>
+              El documento requiere firma del candidato
+            </option>
+            <option value='true'>Sí</option>
+            <option value='false'>No</option>
           </select>
         </label>
         <div className='w-full flex justify-center mt-4'>
