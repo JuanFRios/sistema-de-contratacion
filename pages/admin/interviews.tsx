@@ -1,3 +1,4 @@
+import LoadingComponent from '@components/utils/LoadingComponent';
 import React from 'react';
 // import Link from 'next/link';
 import { matchRoles } from 'utils/matchRoles';
@@ -17,7 +18,7 @@ const Interviews = () => {
   //   fetchPolicy: 'cache-and-network',
   // });
   const loading = false;
-  if (loading) return <div>Loading....</div>;
+  if (loading) return <LoadingComponent />;
 
   return (
     <div>

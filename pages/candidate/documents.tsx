@@ -7,6 +7,7 @@ import FileUpload from '@components/FileUpload';
 import { GET_DOCUMENTS } from 'graphql/queries/document';
 import { useQuery, useMutation } from '@apollo/client';
 import { CREATE_DOCUMENT } from 'graphql/mutations/document';
+import LoadingComponent from '@components/utils/LoadingComponent';
 
 export async function getServerSideProps(context) {
   return {
@@ -44,7 +45,7 @@ const Documents = () => {
     toast.success('document created ok');
   };
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <LoadingComponent />;
 
   return (
     <div className='text-slate-900'>

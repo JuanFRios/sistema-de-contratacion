@@ -1,4 +1,5 @@
 import { useQuery } from '@apollo/client';
+import LoadingComponent from '@components/utils/LoadingComponent';
 import {
   Accordion,
   AccordionDetails,
@@ -33,7 +34,7 @@ const Vacancies = () => {
     setExpanded(isExpanded ? panel : false);
   };
 
-  if (loading) return <div>Loading....</div>;
+  if (loading) return <LoadingComponent />;
 
   return (
     <div className='flex justify-center'>

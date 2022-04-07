@@ -10,6 +10,7 @@ import StepContent from '@mui/material/StepContent';
 import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
+import LoadingComponent from '@components/utils/LoadingComponent';
 
 const AdmissionProcess = ({ closeDialog, admissionProcessId }) => {
   const { data: admissionProcess, loading } = useQuery(
@@ -28,7 +29,7 @@ const AdmissionProcess = ({ closeDialog, admissionProcessId }) => {
     closeDialog();
   };
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <LoadingComponent />;
 
   return (
     <div className='p-10 flex flex-col items-center'>

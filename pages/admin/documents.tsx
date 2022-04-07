@@ -7,6 +7,7 @@ import useFormData from 'hooks/useFormData';
 import { toast } from 'react-toastify';
 import { ButtonLoading } from '@components/utils/ButtonLoading';
 import { CREATE_DOCUMENT } from 'graphql/mutations/document';
+import LoadingComponent from '@components/utils/LoadingComponent';
 
 export async function getServerSideProps(context) {
   return {
@@ -24,7 +25,7 @@ const Documents = () => {
     setOpenNewDialog(false);
   };
 
-  if (loading) return <div>Loading....</div>;
+  if (loading) return <LoadingComponent />;
 
   return (
     <div className='flex justify-center'>

@@ -9,6 +9,7 @@ import useFormData from 'hooks/useFormData';
 import { GET_INTERVIEWS } from 'graphql/queries/interview';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/router';
+import LoadingComponent from '@components/utils/LoadingComponent';
 
 const createInterview = () => {
   const router = useRouter();
@@ -30,7 +31,7 @@ const createInterview = () => {
     // form.current.reset();
   };
 
-  if (loading) return <div>Loading....</div>;
+  if (loading) return <LoadingComponent />;
 
   return (
     <div className='text-slate-900 '>

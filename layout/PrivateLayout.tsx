@@ -5,17 +5,18 @@ import 'react-toastify/dist/ReactToastify.css';
 import { signIn, useSession } from 'next-auth/react';
 import NotAuthorized from 'components/NoAuthorized';
 import Sidebar from 'components/Sidebar';
+import LoadingComponent from '@components/utils/LoadingComponent';
 
 const PrivateLayout = ({ pageAuth, children }: any) => {
   const { data: session, status } = useSession();
 
   if (status === 'loading') {
-    return <Loading />;
+    return <LoadingComponent />;
   }
 
   if (!session) {
     signIn('auth0');
-    return <Loading />;
+    return <LoadingComponent />;
   }
 
   if (!pageAuth) {
@@ -30,7 +31,5 @@ const PrivateLayout = ({ pageAuth, children }: any) => {
     </div>
   );
 };
-
-const Loading = () => <div>Loading...</div>;
 
 export default PrivateLayout;
