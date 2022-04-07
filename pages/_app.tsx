@@ -7,6 +7,8 @@ import {
   HttpLink,
   ApolloProvider,
 } from '@apollo/client';
+import { SessionProvider } from 'next-auth/react';
+import PrivateLayout from 'layout/PrivateLayout';
 
 const client = new ApolloClient({
   cache: new InMemoryCache(),
@@ -17,11 +19,15 @@ const client = new ApolloClient({
   ]),
 });
 
-function MyApp({ Component, pageProps }: AppProps) {
+function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   return (
-    <ApolloProvider client={client}>
-      <Component {...pageProps} />
-    </ApolloProvider>
+    <SessionProvider session={session}>
+      <ApolloProvider client={client}>
+        <PrivateLayout pageAuth={pageProps.auth}>
+          <Component {...pageProps} />
+        </PrivateLayout>
+      </ApolloProvider>
+    </SessionProvider>
   );
 }
 
