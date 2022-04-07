@@ -1,6 +1,7 @@
 import { useMutation, useQuery } from '@apollo/client';
 import { ButtonLoading } from '@components/utils/ButtonLoading';
 import Input from '@components/utils/Input';
+import LoadingComponent from '@components/utils/LoadingComponent';
 import {
   Accordion,
   AccordionDetails,
@@ -14,6 +15,7 @@ import useFormData from 'hooks/useFormData';
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import { matchRoles } from 'utils/matchRoles';
+// eslint-disable-next-line import/no-named-as-default
 import AdmissionProcess from '@components/admin/AdmissionProcess';
 import { AdmissionStatus, findImage } from '@utils/admissionProcess';
 import Image from 'next/image';
@@ -39,7 +41,7 @@ const Vacancies = () => {
     setExpanded(isExpanded ? panel : false);
   };
 
-  if (loading) return <div>Loading....</div>;
+  if (loading) return <LoadingComponent />;
 
   return (
     <div className='flex justify-center'>

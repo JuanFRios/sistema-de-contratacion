@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
+import LoadingComponent from '@components/utils/LoadingComponent';
+// import Link from 'next/link';
 import { matchRoles } from 'utils/matchRoles';
 import { useMutation, useQuery } from '@apollo/client';
 import { GET_INTERVIEWS } from 'graphql/queries/interviews';
@@ -36,7 +38,7 @@ const Interviews = () => {
     },
   });
 
-  if (loading) return <div>Loading....</div>;
+  if (loading) return <LoadingComponent />;
   console.log(data);
 
   return (

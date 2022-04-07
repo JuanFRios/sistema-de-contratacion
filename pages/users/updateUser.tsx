@@ -12,6 +12,7 @@ import { matchRoles } from 'utils/matchRoles';
 import Image from 'next/image';
 import FileUpload from '@components/FileUpload';
 import { ButtonLoading } from '@components/utils/ButtonLoading';
+import LoadingComponent from '@components/utils/LoadingComponent';
 
 export async function getServerSideProps(context) {
   return {
@@ -64,7 +65,7 @@ const UpdateUser = () => {
     toast.success('Perfil modificado con éxito');
   };
 
-  if (loading) return <div>Loading....</div>;
+  if (loading) return <LoadingComponent />;
 
   return (
     <div className='flex flex-col w-full text-slate-900'>

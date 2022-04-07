@@ -12,6 +12,7 @@ import { GET_CANDIDATES } from 'graphql/queries/user';
 import Image from 'next/image';
 import { GET_SIMPLE_VACANCIES } from 'graphql/queries/vacancy';
 import Input from '@components/utils/Input';
+import LoadingComponent from '@components/utils/LoadingComponent';
 
 export async function getServerSideProps(context) {
   const options: AxiosRequestConfig = {
@@ -42,7 +43,7 @@ const Candidates = ({ token }) => {
     fetchPolicy: 'cache-and-network',
   });
 
-  if (loading) return <div>Loading....</div>;
+  if (loading) return <LoadingComponent />;
 
   return (
     <div className='flex justify-center'>

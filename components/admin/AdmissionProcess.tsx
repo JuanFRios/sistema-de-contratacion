@@ -22,6 +22,7 @@ import {
   AdmissionStatus,
   decodeStep,
 } from '@utils/admissionProcess';
+import LoadingComponent from '@components/utils/LoadingComponent';
 
 const AdmissionProcess = ({ closeDialog, admissionProcessId }) => {
   const { data: admissionProcess, loading } = useQuery(
@@ -36,7 +37,7 @@ const AdmissionProcess = ({ closeDialog, admissionProcessId }) => {
   );
   console.log(admissionProcess, loading);
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <LoadingComponent />;
 
   const image = findImage(admissionProcess.getAdmissionProcess.candidate);
 
