@@ -148,7 +148,7 @@ const CreateCandidateDialog = ({ closeDialog, token }) => {
         variables: {
           data: {
             email: userCreateResponse.data.email,
-            name: userCreateResponse.data.name,
+            name: formData.name,
             image: userCreateResponse.data.picture,
             auth0Id: userCreateResponse.data.user_id,
             vacancyId: formData.vacancyId,
@@ -183,6 +183,13 @@ const CreateCandidateDialog = ({ closeDialog, token }) => {
         onSubmit={submitForm}
         className='flex flex-col items-start'
       >
+        <Input
+          name='name'
+          type='text'
+          placeholder='Escribe elnombre del usuario'
+          text='Nombre'
+          required
+        />
         <Input
           name='email'
           type='text'

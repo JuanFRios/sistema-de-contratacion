@@ -1,8 +1,8 @@
 import { gql } from '@apollo/client';
 
 const CREATE_INTERVIEW = gql`
-  mutation Mutation($data: CreateUserAccountInput!) {
-    createUserAccount(data: $data) {
+  mutation Mutation($data: InterviewCreateInput!) {
+    createInterview(data: $data) {
       id
     }
   }
