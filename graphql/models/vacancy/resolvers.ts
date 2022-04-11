@@ -18,7 +18,7 @@ const VacancyResolvers = {
     admissionProcesess: async (parent, args) => {
       return await prisma.admissionProcess.findMany({
         where: {
-          vacancyId: parent.id
+          vacancyId: parent.id,
         },
       });
     },
@@ -39,15 +39,13 @@ const VacancyResolvers = {
     getVacancyByCandidate: async (parent, args) => {
       const admissionProcesses = await prisma.admissionProcess.findMany({
         where: {
-          ...args.where
-        }
+          ...args.where,
+        },
       });
-      console.log(admissionProcesses);
       const { vacancyId } = admissionProcesses[0];
-      console.log('-----------VACANCYID----------', vacancyId);
       return await prisma.vacancy.findUnique({
         where: {
-          id: vacancyId
+          id: vacancyId,
         },
         // include: {
         //   admissionProcesess: true,

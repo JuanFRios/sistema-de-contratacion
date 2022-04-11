@@ -11,10 +11,6 @@ import { ReportChartTypes } from 'graphql/models/chart/types';
 
 const genericTypes = gql`
   scalar Date
-
-  input StringEditField {
-    set: String
-  }
 `;
 
 export const types = [

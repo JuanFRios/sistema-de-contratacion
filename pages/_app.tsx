@@ -1,5 +1,6 @@
 import '../styles/globals.css';
 import type { AppProps } from 'next/app';
+import { WidgetLoader } from 'react-cloudinary-upload-widget';
 import {
   ApolloClient,
   InMemoryCache,
@@ -7,8 +8,9 @@ import {
   HttpLink,
   ApolloProvider,
 } from '@apollo/client';
-import { SessionProvider } from 'next-auth/react';
 import PrivateLayout from 'layout/PrivateLayout';
+import Head from 'next/head';
+import { SessionProvider } from 'next-auth/react';
 
 const client = new ApolloClient({
   cache: new InMemoryCache(),
@@ -24,6 +26,10 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   return (
     <SessionProvider session={session}>
       <ApolloProvider client={client}>
+        <WidgetLoader />
+        <Head>
+          <title>Join us</title>
+        </Head>
         <PrivateLayout pageAuth={pageProps.auth}>
           <Component {...pageProps} />
         </PrivateLayout>
