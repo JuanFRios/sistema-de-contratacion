@@ -1,3 +1,9 @@
+/* eslint-disable @typescript-eslint/no-unused-expressions */
+/* eslint-disable no-alert */
+/* eslint-disable no-sequences */
+/* eslint-disable react/no-unstable-nested-components */
+/* eslint-disable react/button-has-type */
+/* eslint-disable react/no-this-in-sfc */
 import { useMutation, useQuery } from '@apollo/client';
 import { GET_ADMISSIONPROCESS_BY_CANDIDATE } from 'graphql/queries/admissionProcess';
 import Image from 'next/image';
@@ -7,7 +13,7 @@ import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 // import StepContent from '@mui/material/StepContent';
-import Button from '@mui/material/Button';
+import { Button } from '@mui/material';
 import FileUpload from '@components/FileUpload';
 // import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
@@ -39,6 +45,7 @@ const AdmissionProcess = ({ closeDialog, admissionProcessId }) => {
 
   if (loading) return <LoadingComponent />;
 
+  // CAMBIAR A .candidate.profile.customImage
   const image = findImage(admissionProcess.getAdmissionProcess.candidate);
 
   return (
@@ -57,7 +64,7 @@ const AdmissionProcess = ({ closeDialog, admissionProcessId }) => {
       </div>
       <div className='flex flex-col'>
         <div className='w-full text-center text-xl md:text-2xl font-semibold my-4'>
-          Proceso de admisión para{' '}
+          Proceso de admisión{' '}
           {admissionProcess.getAdmissionProcess.vacancy.position}
         </div>
         <div className='h-full overflow-auto'>
@@ -67,10 +74,10 @@ const AdmissionProcess = ({ closeDialog, admissionProcessId }) => {
         </div>
       </div>
 
-      <div className='flex justify-end'>
-        <button type='button' onClick={closeDialog}>
+      <div className='flex justify-end mt-2'>
+        <Button variant='contained' type='button' onClick={closeDialog}>
           Cerrar
-        </button>
+        </Button>
       </div>
     </div>
   );
@@ -147,33 +154,58 @@ const BodyAdmissionProcess = ({ admissionProcess }) => {
           } = {};
           return (
             <Step key={step.label} {...stepProps}>
-              <StepLabel {...labelProps}>{step.label}</StepLabel>
+              <StepLabel
+                sx={{
+                  '& .MuiSvgIcon-root': {
+                    width: '35px',
+                    height: '35px',
+                  },
+                  '& .MuiStepLabel-label ': {
+                    marginTop: '2.5px',
+                    fontSize: '1rem',
+                  },
+                }}
+                {...labelProps}
+              >
+                {step.label}
+              </StepLabel>
             </Step>
           );
         })}
       </Stepper>
       {activeStep === 0 && (
         <>
-          <div className='h-fit overflow-auto mt-4'>
+          <div className='h-fit overflow-auto mt-4 mt-'>
             <InterviewDeatail />
             <InterviewDeatail />
             <InterviewDeatail />
             <InterviewDeatail />
             <InterviewDeatail />
           </div>
-          <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-            {admissionProcess.status !== AdmissionStatus.FASE_CONTRATACION && (
-              <Button color='error' onClick={handleDiscard} sx={{ mr: 1 }}>
-                Descartar
+          <div className='pt-3'>
+            <Box sx={{ display: 'contents', flexDirection: 'column' }}>
+              {admissionProcess.status !==
+                AdmissionStatus.FASE_CONTRATACION && (
+                <Button
+                  variant='contained'
+                  color='error'
+                  onClick={handleDiscard}
+                  sx={{ mr: 1 }}
+                >
+                  Descartar
+                </Button>
+              )}
+              <Button
+                variant='contained'
+                color='success'
+                onClick={handleFinishInterviews}
+              >
+                {admissionProcess.status !== AdmissionStatus.FASE_CONTRATACION
+                  ? 'Terminar entrevistas'
+                  : 'Siguiente'}
               </Button>
-            )}
-            <Box sx={{ flex: '1 1 auto' }} />
-            <Button onClick={handleFinishInterviews}>
-              {admissionProcess.status !== AdmissionStatus.FASE_CONTRATACION
-                ? 'Terminar entrevistas'
-                : 'Siguiente'}
-            </Button>
-          </Box>
+            </Box>
+          </div>
         </>
       )}
       {activeStep === 1 && (
@@ -271,7 +303,7 @@ const DocumentInput = ({ document, admissionProcess, showInput }) => {
       </h6>
       {uploaded.length > 0 && <div>Descargar</div>}
       {showInput && (
-        <div className='bg-slate-400 hover:border-gray-400 border-2 mx-2 rounded-lg text-center cursor-pointer'>
+        <div className=' bg-slate-400 hover:border-gray-400 border-2 mx-2 rounded-lg text-center cursor-pointer'>
           <FileUpload
             folder='documents'
             text='Elegir'
@@ -289,26 +321,31 @@ const DocumentInput = ({ document, admissionProcess, showInput }) => {
 const InterviewDeatail = () => {
   console.log('object');
   return (
-    <div className='flex items-start'>
-      <Image
-        src='https://res.cloudinary.com/proyecto-integrador-udea-2022/image/upload/v1647726660/Screenshot_from_2022-03-19_16-50-20_kqfsoy.png'
-        alt='Perfil admin'
-        height={60}
-        width={60}
-        className='rounded-full w-2/12'
-      />
-      <div className='flex flex-col items-start w-full'>
+    <div className='flex pb-4'>
+      <div className='flex items-center'>
+        <Image
+          src='https://res.cloudinary.com/proyecto-integrador-udea-2022/image/upload/v1647726660/Screenshot_from_2022-03-19_16-50-20_kqfsoy.png'
+          alt='Perfil admin'
+          height={60}
+          width={60}
+          className='rounded-full w-2/12'
+        />
+      </div>
+
+      <div className='flex flex-col items-start w-full pl-4'>
         <p>
           {' '}
           <b>Juan Fernando Ríos</b> hizo un comentario en{' '}
           <b>entrevista sicológica</b>
         </p>
-        <p className='text-justify'>
-          El candidato es una persona tímida y poco expresiva El candidato es
-          una persona tímida y poco expresiva El candidato es una persona tímida
-          y poco expresiva El candidato es una persona tímida y poco expresiva
-          El candidato es una persona tímida y poco expresiva{' '}
-        </p>
+        <div className='text-justify border-2 rounded-lg border-slate-500'>
+          <p className='p-1'>
+            El candidato es una persona tímida y poco expresiva El candidato es
+            una persona tímida y poco expresiva El candidato es una persona
+            tímida y poco expresiva El candidato es una persona tímida y poco
+            expresiva El candidato es una persona tímida y poco expresiva{' '}
+          </p>
+        </div>
       </div>
     </div>
   );
