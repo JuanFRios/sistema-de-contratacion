@@ -6,6 +6,7 @@ import { useRouter } from 'next/router';
 import Image from 'next/image';
 import { adminMenuOptions, candidateMenuOptions } from 'utils/menu';
 import { signOut, useSession } from 'next-auth/react';
+import { findImage } from '../utils/admissionProcess';
 
 const Sidebar = ({ child }: any) => {
   const [showResponsiveSidebar, setShowResponsiveSidebar] = useState(false);
@@ -44,68 +45,74 @@ const Sidebar = ({ child }: any) => {
   );
 };
 
-const SidebarBig = ({ chil }: any) => (
-  <div className='hidden md:flex'>
-    <nav className='flex flex-col bg-white w-72 absolute min-h-screen border-r-2 z-10 divide-y'>
-      <div className='w-full h-fit flex flex-col items-center justify-center'>
-        <div className='pt-4'>
-          <Image
-            src='/no-profile.jpeg'
-            alt='User Profile'
-            height={120}
-            width={120}
-            className='rounded-full'
-          />
+const SidebarBig = ({ chil }: any) => {
+  const { data: session }: any = useSession();
+  const image = findImage(session.user);
+  return (
+    <div className='hidden md:flex'>
+      <nav className='flex flex-col bg-white w-72 absolute min-h-screen border-r-2 z-10 divide-y'>
+        <div className='w-full h-fit flex flex-col items-center justify-center'>
+          <div className='pt-4'>
+            <Image
+              src={image}
+              alt='User Profile'
+              height={120}
+              width={120}
+              className='rounded-full'
+            />
+          </div>
+          <div className='flex flex-col w-full px-4'>
+            <span className='font-bold text-2xl text-center'>
+              {session.user.name}
+            </span>
+            <span className='font-light text-lg text-center'>
+              {session.user.email}
+            </span>
+          </div>
+          <div className='w-2/3 my-4'>
+            <div className='border-2 mx-4 rounded-full border-slate-300 hover:border-blue-400'>
+              <Link href='/users/updateUser'>
+                <div className='w-full hover:cursor-pointer flex justify-center'>
+                  <i className='fa-solid fa-pen-to-square my-1' />
+                  <span className='ml-2'>Editar perfil</span>
+                </div>
+              </Link>
+            </div>
+          </div>
         </div>
-        <div className='flex flex-col w-full px-4'>
-          <span className='font-bold text-2xl text-center'>
-            Juan Fernando Ríos
-          </span>
-          <span className='font-light text-lg text-center'>
-            juanfer4811@gmail.com
-          </span>
+        <div className='font-normal'>
+          <MenuOptions />
         </div>
-        <div className='w-2/3 my-4'>
-          <div className='border-2 mx-4 rounded-full border-slate-300 hover:border-blue-400'>
-            <Link href='/users/updateUser'>
-              <div className='w-full hover:cursor-pointer flex justify-center'>
-                <i className='fa-solid fa-pen-to-square my-1' />
-                <span className='ml-2'>Editar perfil</span>
-              </div>
-            </Link>
+        <div className='bottom-0 absolute w-full my-2 py-2'>
+          <div className='mx-4'>
+            <div className='flex justify-center font-semibold text-xl'>
+              <button
+                type='button'
+                className='bottom-0 '
+                onClick={() => signOut()}
+              >
+                <i className='fa-solid fa-door-open' />
+                <span className='ml-2 font-semibold text-xl'>
+                  Cerrar Sesion
+                </span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </nav>
+      <div className='w-full pl-72'>
+        <div className='bg-white w-full h-20 flex justify-end items-center border-b-2 '>
+          <div className='pr-9'>
+            <img src='/logo-joinus.png' alt='Logo join us' />
           </div>
         </div>
       </div>
-      <div className='font-normal'>
-        <MenuOptions />
-      </div>
-      <div className='bottom-0 absolute w-full my-2 py-2'>
-        <div className='mx-4'>
-          <div className='flex justify-center font-semibold text-xl'>
-            <button
-              type='button'
-              className='bottom-0 '
-              onClick={() => signOut()}
-            >
-              <i className='fa-solid fa-door-open' />
-              <span className='ml-2 font-semibold text-xl'>Cerrar Sesion</span>
-            </button>
-          </div>
-        </div>
-      </div>
-    </nav>
-    <div className='w-full pl-72'>
-      <div className='bg-white w-full h-20 flex justify-end items-center border-b-2 '>
-        <div className='pr-9'>
-          <img src='/logo-joinus.png' alt='Logo join us' />
-        </div>
+      <div className='pl-72 pt-20 w-full h-full absolute'>
+        <div className='bg-slate-100 w-full h-full overflow-auto'>{chil}</div>
       </div>
     </div>
-    <div className='pl-72 pt-20 w-full h-full absolute'>
-      <div className='bg-slate-100 w-full h-full overflow-auto'>{chil}</div>
-    </div>
-  </div>
-);
+  );
+};
 
 const MenuOptions = () => {
   const { data: session }: any = useSession();

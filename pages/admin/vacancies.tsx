@@ -126,7 +126,6 @@ const Vacancy = ({ vacancy, expanded, handleChange }) => {
 
 const ItemContratationProcess = ({ admissionProcess }) => {
   const [openProcessDialog, setOpenProcessDialog] = useState(false);
-  console.log('candidate', admissionProcess.candidate);
   const image = findImage(admissionProcess.candidate);
   const closeDialog = () => {
     setOpenProcessDialog(false);
@@ -195,43 +194,37 @@ const ItemContratationProcess = ({ admissionProcess }) => {
   );
 };
 
-const VacancyDetail = ({ closeDialog, vacancy }) => {
-  console.log('object');
-  return (
-    <div className='p-10 flex flex-col items-start w-full'>
-      <h2 className='my-3 mb-2 text-2xl font-extrabold text-gray-900 w-full text-center'>
-        {vacancy.position}
-      </h2>
-      <p>
-        {' '}
-        <b>Rango salarial: </b> {vacancy.minimumSalary} -{' '}
-        {vacancy.maximumSalary}
-      </p>
-      <p>
-        {' '}
-        <b>Fecha de ingreso: </b> {vacancy.startDate}
-      </p>
-      <p>
-        {' '}
-        <b>Número máximo de aspirantes: </b> {vacancy.candidatesQuantity}
-      </p>
+const VacancyDetail = ({ closeDialog, vacancy }) => (
+  <div className='p-10 flex flex-col items-start w-full'>
+    <h2 className='my-3 mb-2 text-2xl font-extrabold text-gray-900 w-full text-center'>
+      {vacancy.position}
+    </h2>
+    <p>
+      {' '}
+      <b>Rango salarial: </b> {vacancy.minimumSalary} - {vacancy.maximumSalary}
+    </p>
+    <p>
+      {' '}
+      <b>Fecha de ingreso: </b> {vacancy.startDate}
+    </p>
+    <p>
+      {' '}
+      <b>Número máximo de aspirantes: </b> {vacancy.candidatesQuantity}
+    </p>
 
-      <div className='w-full flex justify-center mt-4'>
-        <button type='button' onClick={closeDialog}>
-          Cerrar
-        </button>
-      </div>
+    <div className='w-full flex justify-center mt-4'>
+      <button type='button' onClick={closeDialog}>
+        Cerrar
+      </button>
     </div>
-  );
-};
+  </div>
+);
 
 const NewVacancy = ({ closeDialog }) => {
   const { form, formData, updateFormData } = useFormData(null);
   const [createVacancy, { loading }] = useMutation(CREATE_VACANCY);
   const submitForm = async (e) => {
     e.preventDefault();
-    console.log(formData);
-    console.log(createVacancy);
     await createVacancy({
       variables: {
         data: {

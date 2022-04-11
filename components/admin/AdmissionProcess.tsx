@@ -41,7 +41,6 @@ const AdmissionProcess = ({ closeDialog, admissionProcessId }) => {
       },
     }
   );
-  console.log(admissionProcess, loading);
 
   if (loading) return <LoadingComponent />;
 
@@ -87,21 +86,14 @@ const BodyAdmissionProcess = ({ admissionProcess }) => {
   const [activeStep, setActiveStep] = useState(
     decodeStep(admissionProcess.status)
   );
-  const [changeStatus, { loading }] = useMutation(
-    CHANGE_STATUS_ADMISSION_PROCESS
-  );
+  const [changeStatus] = useMutation(CHANGE_STATUS_ADMISSION_PROCESS);
 
   if (admissionProcess.status === AdmissionStatus.FASE_ENTREVISTAS) {
     // setActiveStep(0);
-    console.log('s');
   }
   if (admissionProcess.status === AdmissionStatus.DESCARTADO) {
     // setActiveStep(1);
-    console.log('object');
   }
-
-  console.log(admissionProcess);
-  console.log(loading);
 
   const ChangeStatus = async (status) => {
     try {
@@ -225,9 +217,8 @@ const BodyAdmissionProcess = ({ admissionProcess }) => {
 
 const DocumentsHire = ({ admissionProcess }) => {
   const { data: documents, loading } = useQuery(GET_REQUIRED_DOCUMENTS);
-  console.log(documents, loading);
   if (loading) {
-    return <div>loading..</div>;
+    return <LoadingComponent />;
   }
   return (
     <div>
@@ -270,7 +261,6 @@ const DocumentsHire = ({ admissionProcess }) => {
 };
 
 const DocumentInput = ({ document, admissionProcess, showInput }) => {
-  console.log('object');
   const [createDocument] = useMutation(CREATE_OR_UPDATE_DOCUMENT_UPLOAD, {
     refetchQueries: [GET_ADMISSIONPROCESS_BY_CANDIDATE],
   });
@@ -278,9 +268,7 @@ const DocumentInput = ({ document, admissionProcess, showInput }) => {
   const uploaded = admissionProcess.uploadDocumentation.filter(
     (u) => u.documentId === document.id
   );
-  console.log(uploaded);
   const successCallback = async (e) => {
-    console.log(e);
     await createDocument({
       variables: {
         data: {
@@ -318,37 +306,34 @@ const DocumentInput = ({ document, admissionProcess, showInput }) => {
   );
 };
 
-const InterviewDeatail = () => {
-  console.log('object');
-  return (
-    <div className='flex pb-4'>
-      <div className='flex items-center'>
-        <Image
-          src='https://res.cloudinary.com/proyecto-integrador-udea-2022/image/upload/v1647726660/Screenshot_from_2022-03-19_16-50-20_kqfsoy.png'
-          alt='Perfil admin'
-          height={60}
-          width={60}
-          className='rounded-full w-2/12'
-        />
-      </div>
+const InterviewDeatail = () => (
+  <div className='flex pb-4'>
+    <div className='flex items-center'>
+      <Image
+        src='https://res.cloudinary.com/proyecto-integrador-udea-2022/image/upload/v1647726660/Screenshot_from_2022-03-19_16-50-20_kqfsoy.png'
+        alt='Perfil admin'
+        height={60}
+        width={60}
+        className='rounded-full w-2/12'
+      />
+    </div>
 
-      <div className='flex flex-col items-start w-full pl-4'>
-        <p>
-          {' '}
-          <b>Juan Fernando Ríos</b> hizo un comentario en{' '}
-          <b>entrevista sicológica</b>
+    <div className='flex flex-col items-start w-full pl-4'>
+      <p>
+        {' '}
+        <b>Juan Fernando Ríos</b> hizo un comentario en{' '}
+        <b>entrevista sicológica</b>
+      </p>
+      <div className='text-justify border-2 rounded-lg border-slate-500'>
+        <p className='p-1'>
+          El candidato es una persona tímida y poco expresiva El candidato es
+          una persona tímida y poco expresiva El candidato es una persona tímida
+          y poco expresiva El candidato es una persona tímida y poco expresiva
+          El candidato es una persona tímida y poco expresiva{' '}
         </p>
-        <div className='text-justify border-2 rounded-lg border-slate-500'>
-          <p className='p-1'>
-            El candidato es una persona tímida y poco expresiva El candidato es
-            una persona tímida y poco expresiva El candidato es una persona
-            tímida y poco expresiva El candidato es una persona tímida y poco
-            expresiva El candidato es una persona tímida y poco expresiva{' '}
-          </p>
-        </div>
       </div>
     </div>
-  );
-};
+  </div>
+);
 
 export default AdmissionProcess;

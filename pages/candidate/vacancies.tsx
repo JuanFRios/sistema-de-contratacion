@@ -10,6 +10,7 @@ import { GET_REQUIRED_DOCUMENTS } from 'graphql/queries/document';
 import { CREATE_OR_UPDATE_DOCUMENT_UPLOAD } from 'graphql/mutations/document';
 import { toast } from 'react-toastify';
 import FileUpload from '@components/FileUpload';
+import LoadingComponent from '@components/utils/LoadingComponent';
 
 export async function getServerSideProps(context) {
   return {
@@ -35,7 +36,7 @@ const Vacancies = () => {
     setExpanded(isExpanded ? panel : false);
   };
   if (loading) {
-    return <div>loading...</div>;
+    return <LoadingComponent />;
   }
 
   let admissionProcess = data.getVacancyByCandidate.admissionProcesess.filter(
@@ -68,8 +69,6 @@ const Vacancies = () => {
       span = 'Indeterminado';
       break;
   }
-
-  console.log(admissionProcess);
 
   return (
     <div className='flex justify-center'>
@@ -119,29 +118,24 @@ const Vacancies = () => {
   );
 };
 
-const Interviews = ({ interviews }) => {
-  console.log(interviews);
-  return (
-    <div>
-      {interviews.length === 0 && (
-        <p className='w-full text-center'>
-          Aún no hay postulados para esta vacante
-        </p>
-      )}
-      {interviews.map((i) => (
-        <Interview key={i.id} interview={i} />
-      ))}
-    </div>
-  );
-};
+const Interviews = ({ interviews }) => (
+  <div>
+    {interviews.length === 0 && (
+      <p className='w-full text-center'>
+        Aún no hay postulados para esta vacante
+      </p>
+    )}
+    {interviews.map((i) => (
+      <Interview key={i.id} interview={i} />
+    ))}
+  </div>
+);
 
 const Documentation = ({ admissionProcess }) => {
   const { data: documents, loading } = useQuery(GET_REQUIRED_DOCUMENTS);
-  console.log(documents, loading);
   if (loading) {
-    return <div>loading..</div>;
+    return <LoadingComponent />;
   }
-  console.log(admissionProcess.uploadDocumentation);
   return (
     <div>
       {documents.getDocuments.map((document) => {
@@ -165,21 +159,17 @@ const Documentation = ({ admissionProcess }) => {
   );
 };
 
-const Interview = ({ interview }) => {
-  console.log(interview);
-  return (
-    <div>
-      <p>{interview.name}</p>
-      <p>{interview.date}</p>
-      <p>{interview.meetingDetail}</p>
-      <p>{interview.status}</p>
-      <p>{interview.interviewer.name}</p>
-    </div>
-  );
-};
+const Interview = ({ interview }) => (
+  <div>
+    <p>{interview.name}</p>
+    <p>{interview.date}</p>
+    <p>{interview.meetingDetail}</p>
+    <p>{interview.status}</p>
+    <p>{interview.interviewer.name}</p>
+  </div>
+);
 
 const DocumentInput = ({ document, admissionProcess, showInput }) => {
-  console.log('object');
   const [createDocument] = useMutation(CREATE_OR_UPDATE_DOCUMENT_UPLOAD, {
     refetchQueries: [GET_VACANCIES_BY_CANDIDATE],
   });
@@ -187,9 +177,7 @@ const DocumentInput = ({ document, admissionProcess, showInput }) => {
   const uploaded = admissionProcess.uploadDocumentation.filter(
     (u) => u.documentId === document.id
   );
-  console.log(uploaded);
   const successCallback = async (e) => {
-    console.log(e);
     await createDocument({
       variables: {
         data: {

@@ -1,14 +1,11 @@
 import React, { useState } from 'react';
 import { matchRoles } from 'utils/matchRoles';
-import { useMutation, useQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import { Button, Dialog } from '@mui/material';
 import { GET_DOCUMENTS } from 'graphql/queries/document';
-import useFormData from 'hooks/useFormData';
-import { toast } from 'react-toastify';
-import { ButtonLoading } from '@components/utils/ButtonLoading';
-import { CREATE_DOCUMENT } from 'graphql/mutations/document';
 import LoadingComponent from '@components/utils/LoadingComponent';
-import Input from '@components/utils/Input';
+import CreateDocumentDialog from '@components/admin/documents/CreateDocumentDialog';
+import DocumentItem from '@components/admin/documents/DocumentItem';
 
 export async function getServerSideProps(context) {
   return {
@@ -47,163 +44,13 @@ const Documents = () => {
         </div>
         <div className='flex flex-wrap justify-center'>
           {data.getDocuments.map((d) => (
-            <Document key={d.id} document={d} />
+            <DocumentItem key={d.id} document={d} />
           ))}
         </div>
       </div>
       <Dialog open={openNewDialog} onClose={closeDialog}>
         <CreateDocumentDialog closeDialog={closeDialog} />
       </Dialog>
-    </div>
-  );
-};
-
-const Document = ({ document }) => {
-  let classNameType;
-  let spanType;
-  switch (document.type) {
-    case 'Company':
-      classNameType =
-        'text-sm text-sky-700 font-mono bg-sky-200 rounded-full px-2 flex items-center';
-      spanType = 'Empresa';
-      break;
-    default:
-      classNameType =
-        'text-sm text-teal-800 font-mono bg-teal-100 rounded-full px-2 flex items-center';
-      spanType = 'Candidato';
-      break;
-  }
-  let classNameSignature;
-  let spanSignature;
-  switch (document.signature) {
-    case true:
-      classNameSignature =
-        'text-sm text-teal-800 font-mono bg-teal-100 rounded-full px-2 flex items-center';
-      spanSignature = 'Si';
-      break;
-    default:
-      classNameSignature =
-        'text-sm text-sky-700 font-mono bg-sky-200 rounded-full px-2 flex items-center';
-      spanSignature = 'No';
-      break;
-  }
-
-  return (
-    <div>
-      <div className='flex justify-center p-4'>
-        <div
-          className='p-3 border-2 border-inherit rounded-lg bg-slate-50 drop-shadow-lg text-slate-900
-      hover:cursor-pointer hover:bg-slate-200
-      w-96 h-48 overflow-auto'
-        >
-          <div className='flex-col justify-center'>
-            <p className='font-semibold text-xl text-center pl-4 pb-2'>
-              {document.name}
-            </p>
-            <p className='flex font-semibold pb-2'>
-              Descripción:
-              <p className='ml-2 font-normal '>{document.description}</p>
-            </p>
-            <p className='font-semibold float-left pb-1'>
-              Encargado:
-              <p className={classNameType}>{spanType}</p>
-            </p>
-            <p className='font-semibold float-right pb-1'>
-              Requiere firma:
-              <p className={classNameSignature}>{spanSignature}</p>
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-const CreateDocumentDialog = ({ closeDialog }) => {
-  const { form, formData, updateFormData } = useFormData(null);
-  const [createDocument, { loading }] = useMutation(CREATE_DOCUMENT);
-  const submitForm = async (e) => {
-    e.preventDefault();
-    console.log(createDocument);
-    try {
-      await createDocument({
-        variables: {
-          data: {
-            name: formData.name,
-            description: formData.description,
-            type: formData.type,
-            signature: formData.signature === 'true',
-          },
-        },
-      });
-      toast.success(`Documento ${formData.name} creado exitosamente`);
-      closeDialog();
-    } catch (error) {
-      toast.error('Error creando el documento');
-      closeDialog();
-    }
-  };
-  return (
-    <div className='p-10 flex flex-col items-center'>
-      <h2 className='my-3 mb-2 text-2xl font-extrabold text-gray-900'>
-        Crear Documento
-      </h2>
-      <form
-        ref={form}
-        onChange={updateFormData}
-        onSubmit={submitForm}
-        className='flex flex-col'
-      >
-        <Input
-          name='name'
-          type='text'
-          placeholder='Escribe el nombre del documento'
-          text='Nombre'
-          required
-        />
-        <Input
-          name='description'
-          type='text'
-          placeholder='Escribe la descripción'
-          text='Descripción'
-          required
-        />
-        <label
-          htmlFor='type'
-          className='my-4 font-semibold text-gray-900 duration-300 peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500'
-        >
-          <select
-            name='type'
-            required
-            className='py-2.5 px-0 bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block '
-          >
-            <option disabled selected>
-              Seleccione el encargado de subir el documento
-            </option>
-            <option value='Company'>Empresa</option>
-            <option value='Candidate'>Candidato</option>
-          </select>
-        </label>
-        <label
-          htmlFor='signature'
-          className='my-4 font-semibold text-gray-900 duration-300 peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500'
-        >
-          <select
-            name='signature'
-            required
-            className='py-2.5 px-0 bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block '
-          >
-            <option disabled selected>
-              El documento requiere firma del candidato
-            </option>
-            <option value='true'>Sí</option>
-            <option value='false'>No</option>
-          </select>
-        </label>
-        <div className='w-full flex justify-center mt-4'>
-          <ButtonLoading isSubmit text='Crear Documento' loading={loading} />
-        </div>
-      </form>
     </div>
   );
 };

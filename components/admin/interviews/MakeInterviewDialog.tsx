@@ -1,6 +1,7 @@
 import { useMutation } from '@apollo/client';
 import { ButtonLoading } from '@components/utils/ButtonLoading';
 import Input from '@components/utils/Input';
+import LoadingComponent from '@components/utils/LoadingComponent';
 import { COMPLETE_INTERVIEW } from 'graphql/mutations/interview';
 import useFormData from 'hooks/useFormData';
 import React from 'react';
@@ -33,10 +34,8 @@ const MakeInterviewDialog = ({ closeDialog, interview }) => {
       closeDialog();
     }
   };
-  console.log('first');
-  console.log(closeDialog, interview);
   if (loading) {
-    return <div>Loading...</div>;
+    return <LoadingComponent />;
   }
   return (
     <div>

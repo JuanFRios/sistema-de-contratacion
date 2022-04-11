@@ -6,6 +6,8 @@ import { GET_SIMPLE_ADMISSIONPROCESESS } from 'graphql/queries/vacancy';
 import useFormData from 'hooks/useFormData';
 import React from 'react';
 import { toast } from 'react-toastify';
+import LoadingComponent from '@components/utils/LoadingComponent';
+import { AdmissionStatus } from '../../../utils/admissionProcess';
 
 const CreateInterviewDialog = ({ closeDialog, interviwerId }) => {
   const { form, formData, updateFormData } = useFormData(null);
@@ -43,13 +45,16 @@ const CreateInterviewDialog = ({ closeDialog, interviwerId }) => {
   };
 
   if (loadingVacancies) {
-    return <div>loading...</div>;
+    return <LoadingComponent />;
   }
 
   const admissionProcess = [];
   vacancies.getVacancies.forEach((v) =>
     v.admissionProcesess.forEach((a) => {
-      admissionProcess.push(a);
+      console.log(a);
+      if (a.status === AdmissionStatus.FASE_ENTREVISTAS) {
+        admissionProcess.push(a);
+      }
     })
   );
 

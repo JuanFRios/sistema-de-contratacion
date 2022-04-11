@@ -22,8 +22,6 @@ const PrivateLayout = ({ pageAuth, children }: any) => {
   if (!pageAuth) {
     return <NotAuthorized />;
   }
-  // eslint-disable-next-line no-console
-  console.log(pageAuth);
   return (
     <div>
       <Sidebar child={children} />

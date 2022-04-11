@@ -39,6 +39,7 @@ const GET_SIMPLE_ADMISSIONPROCESESS = gql`
     getVacancies {
       admissionProcesess {
         id
+        status
         candidate {
           name
         }

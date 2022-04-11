@@ -13,6 +13,7 @@ import Image from 'next/image';
 import FileUpload from '@components/FileUpload';
 import { ButtonLoading } from '@components/utils/ButtonLoading';
 import LoadingComponent from '@components/utils/LoadingComponent';
+import { findImage } from '../../utils/admissionProcess';
 
 export async function getServerSideProps(context) {
   return {
@@ -54,7 +55,7 @@ const UpdateUser = () => {
     e.preventDefault();
     await updateUser({
       variables: {
-        user: userData.getUser.profile.id,
+        user: session.user.profile.id,
         data: {
           phone: formData.phone,
           identification: formData.identification,
@@ -77,9 +78,7 @@ const UpdateUser = () => {
         <div className='flex justify-center '>
           <div className='flex-col items-center mr-12'>
             <Image
-              src={
-                userData.getUser.profile?.customImage ?? userData.getUser.image
-              }
+              src={findImage(session.user)}
               alt='User Profile'
               height={200}
               width={200}
@@ -112,7 +111,7 @@ const UpdateUser = () => {
               className='py-2.5 text-xl font-normal px-3 text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-non focus:outline-none focus:ring-0 focus:border-blue-600 '
               name='identification'
               type='text'
-              defaultValue={userData.getUser.profile?.identification}
+              defaultValue={session.user.profile?.identification}
               required
             />
           </label>
@@ -126,7 +125,7 @@ const UpdateUser = () => {
               name='phone'
               type='text'
               onChange={updateFormData}
-              defaultValue={userData.getUser.profile?.phone}
+              defaultValue={session.user.profile?.phone}
               required
             />
           </label>
@@ -139,7 +138,7 @@ const UpdateUser = () => {
               className='py-2.5 text-xl font-normal px-3 text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-non focus:outline-none focus:ring-0 focus:border-blue-600'
               name='address'
               type='text'
-              defaultValue={userData.getUser.profile?.address}
+              defaultValue={session.user.profile?.address}
               required
             />
           </label>

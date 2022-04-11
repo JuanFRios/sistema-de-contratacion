@@ -3,6 +3,7 @@ import { matchRoles } from 'utils/matchRoles';
 import dynamic from 'next/dynamic';
 import { useQuery } from '@apollo/client';
 import { GET_CHART_DATA } from 'graphql/queries/chart';
+import LoadingComponent from '@components/utils/LoadingComponent';
 
 const ReactApexChart = dynamic(
   // eslint-disable-next-line arrow-body-style
@@ -52,7 +53,7 @@ const Report = () => {
     }
   }, [data, options]);
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <LoadingComponent />;
 
   return (
     <div className='place-content-center'>
