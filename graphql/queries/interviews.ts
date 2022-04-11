@@ -7,6 +7,8 @@ const GET_INTERVIEWS = gql`
       name
       date
       meetingDetail
+      notes
+      status
       interviewerId
       admissionProcess {
         vacancy {

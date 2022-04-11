@@ -8,4 +8,15 @@ const CREATE_INTERVIEW = gql`
   }
 `;
 
-export { CREATE_INTERVIEW };
+const COMPLETE_INTERVIEW = gql`
+  mutation Mutation(
+    $where: InterviewFilterId!
+    $data: InterviewCompleteInput!
+  ) {
+    completeInterview(where: $where, data: $data) {
+      id
+    }
+  }
+`;
+
+export { CREATE_INTERVIEW, COMPLETE_INTERVIEW };
