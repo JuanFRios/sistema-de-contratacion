@@ -32,11 +32,10 @@ const DocumentItem = ({ document }) => {
 
   return (
     <div>
-      <div className='flex justify-center p-4'>
+      <div className='flex justify-center p-4 '>
         <div
           className='p-3 border-2 border-inherit rounded-lg bg-slate-50 drop-shadow-lg text-slate-900
-        hover:cursor-pointer hover:bg-slate-200
-        w-96 h-48 overflow-auto'
+        w-96 h-36 overflow-auto'
         >
           <div className='flex-col justify-center'>
             <p className='font-semibold text-xl text-center pl-4 pb-2'>

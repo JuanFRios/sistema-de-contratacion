@@ -10,10 +10,13 @@ import LoadingComponent from '@components/utils/LoadingComponent';
 import { AdmissionStatus } from 'utils/admissionProcess';
 import moment from 'moment';
 import { Button } from '@mui/material';
+import { GET_INTERVIEWS } from 'graphql/queries/interviews';
 
 const CreateInterviewDialog = ({ closeDialog, interviwerId }) => {
   const { form, formData, updateFormData } = useFormData(null);
-  const [createUser, { loading }] = useMutation(CREATE_INTERVIEW);
+  const [createUser, { loading }] = useMutation(CREATE_INTERVIEW, {
+    refetchQueries: [GET_INTERVIEWS],
+  });
   const { data: vacancies, loading: loadingVacancies } = useQuery(
     GET_SIMPLE_ADMISSIONPROCESESS,
     {
@@ -89,13 +92,12 @@ const CreateInterviewDialog = ({ closeDialog, interviwerId }) => {
         <Input
           name='date'
           type='datetime-local'
-          min=''
+          min={moment().format('YYYY-MM-DDThh:mm')}
           max=''
           placeholder='Fecha de la entrevista'
           text='Fecha y hora'
           required
         />
-        {console.log(moment().format())}
         <label htmlFor='admissionProcessId' className='my-2 flex items-center'>
           <span className='mx-2'>Candidato:</span>
           <select

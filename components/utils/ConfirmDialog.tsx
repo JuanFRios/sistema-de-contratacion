@@ -3,9 +3,9 @@ import { ButtonLoading } from '@components/utils/ButtonLoading';
 import { Button } from '@mui/material';
 
 const ConfirmDialog = ({ closeDialog, onConfirm, loading, message }) => (
-  <div>
-    <p>{message}</p>
-    <div>
+  <div className='m-5'>
+    <p className='font-bold text-lg p-2'>{message}</p>
+    <div className='m-2 flex justify-evenly'>
       <ButtonLoading isSubmit text='Sí' loading={loading} onClick={onConfirm} />
       <Button
         variant='contained'
