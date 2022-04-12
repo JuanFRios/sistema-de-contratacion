@@ -79,6 +79,8 @@ const CreateCandidateDialog = ({ closeDialog, token }) => {
         <Input
           name='name'
           type='text'
+          min=''
+          max=''
           placeholder='Escribe elnombre del usuario'
           text='Nombre'
           required
@@ -86,6 +88,8 @@ const CreateCandidateDialog = ({ closeDialog, token }) => {
         <Input
           name='email'
           type='text'
+          min=''
+          max=''
           placeholder='Escribe el email del usuario'
           text='E-mail'
           required
@@ -94,6 +98,8 @@ const CreateCandidateDialog = ({ closeDialog, token }) => {
           <Input
             name='phone'
             type='text'
+            min=''
+            max=''
             placeholder='Escribe el número telefónico'
             text='Teléfono'
             required
@@ -101,6 +107,8 @@ const CreateCandidateDialog = ({ closeDialog, token }) => {
           <Input
             name='identification'
             type='text'
+            min=''
+            max=''
             placeholder='Escribe el número de identificación'
             text='Identificación'
             required
@@ -109,6 +117,8 @@ const CreateCandidateDialog = ({ closeDialog, token }) => {
         <Input
           name='address'
           type='text'
+          min=''
+          max=''
           placeholder='Escribe la dirección'
           text='Dirección'
           required

@@ -54,6 +54,8 @@ const MakeInterviewDialog = ({ closeDialog, interview }) => {
             <Input
               name='notes'
               type='text'
+              min=''
+              max=''
               placeholder='Escribir comentarios'
               text='Comentarios'
               required

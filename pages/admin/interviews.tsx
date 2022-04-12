@@ -39,7 +39,7 @@ const Interviews = () => {
       <div className='w-full lg:w-11/12'>
         <div>
           <h1 className='flex justify-center pt-12 pb-6 font-bold text-4xl'>
-            Candidatos
+            Entrevistas
           </h1>
         </div>
         <div className='m-4 pb-6 flex justify-end text-9xl'>
