@@ -1,5 +1,4 @@
 import { useMutation } from '@apollo/client';
-import { ButtonLoading } from '@components/utils/ButtonLoading';
 import Input from '@components/utils/Input';
 import { CREATE_DOCUMENT } from 'graphql/mutations/document';
 import useFormData from 'hooks/useFormData';
@@ -98,14 +97,18 @@ const CreateDocumentDialog = ({ closeDialog }) => {
           </select>
         </label>
         <div className='w-full flex justify-center mt-4'>
-          <ButtonLoading isSubmit text='Crear Documento' loading={loading} />
+          {/* <ButtonLoading isSubmit text='Crear Documento' loading={loading} /> */}
           <button onClick={() => setOpenConfirmDialog(true)} type='button'>
             ir
           </button>
         </div>
       </form>
       <Dialog open={openConfirmDialog} onClose={closeConfirmDialog}>
-        <ConfirmDialog closeDialog={closeConfirmDialog} formData={formData} />
+        <ConfirmDialog
+          closeDialog={closeConfirmDialog}
+          onConfirm={submitForm}
+          loading={loading}
+        />
       </Dialog>
     </div>
   );
