@@ -1,5 +1,4 @@
 import { useMutation, useQuery } from '@apollo/client';
-import { ButtonLoading } from '@components/utils/ButtonLoading';
 import Input from '@components/utils/Input';
 import LoadingComponent from '@components/utils/LoadingComponent';
 import {
@@ -19,6 +18,8 @@ import AdmissionProcess from '@components/admin/AdmissionProcess';
 import { AdmissionStatus, findImage } from '@utils/admissionProcess';
 import Image from 'next/image';
 import moment from 'moment';
+// import ConfirmDialog from '@components/utils/ConfirmDialog';
+import { ButtonLoading } from '@components/utils/ButtonLoading';
 
 export async function getServerSideProps(context) {
   return {
@@ -235,7 +236,11 @@ const NewVacancy = ({ closeDialog }) => {
   const [createVacancy, { loading }] = useMutation(CREATE_VACANCY, {
     refetchQueries: [GET_VACANCIES],
   });
+  // const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
 
+  // const closeConfirmDialog = () => {
+  //   setOpenConfirmDialog(false);
+  // };
   const submitForm = async (e) => {
     e.preventDefault();
     await createVacancy({
@@ -322,10 +327,31 @@ const NewVacancy = ({ closeDialog }) => {
             required
           />
         </div>
-        <div className='w-full flex justify-center mt-4'>
+        <div className='w-full flex justify-between mt-4'>
+          <Button variant='contained' type='button' onClick={closeDialog}>
+            Cerrar
+          </Button>
+          {/* <Button
+            variant='contained'
+            color='success'
+            type='button'
+            onClick={() => setOpenConfirmDialog(true)}
+          >
+            Crear vacante
+          </Button> */}
           <ButtonLoading isSubmit text='Crear vacante' loading={loading} />
         </div>
       </form>
+      {/* <div className='w-full flex justify-center mt-4'>
+        <Dialog open={openConfirmDialog} onClose={closeConfirmDialog}>
+          <ConfirmDialog
+            closeDialog={closeConfirmDialog}
+            onConfirm={submitForm}
+            loading={loading}
+            message='¿Seguro que desea crear esta vacante?'
+          />
+        </Dialog>
+      </div> */}
     </div>
   );
 };

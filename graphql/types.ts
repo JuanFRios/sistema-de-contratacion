@@ -23,5 +23,5 @@ export const types = [
   InterviewTypes,
   ProfileTypes,
   UploadedDocumentTypes,
-  ReportChartTypes
+  ReportChartTypes,
 ];

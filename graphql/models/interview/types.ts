@@ -47,7 +47,10 @@ const InterviewTypes = gql`
 
   type Mutation {
     createInterview(data: InterviewCreateInput!): Interview
-    completeInterview(where: InterviewFilterId!, data: InterviewCompleteInput!): Interview
+    completeInterview(
+      where: InterviewFilterId!
+      data: InterviewCompleteInput!
+    ): Interview
   }
 
   type Query {
