@@ -50,6 +50,8 @@ const CreateDocumentDialog = ({ closeDialog }) => {
         <Input
           name='name'
           type='text'
+          min=''
+          max=''
           placeholder='Escribe el nombre del documento'
           text='Nombre'
           required
@@ -57,6 +59,8 @@ const CreateDocumentDialog = ({ closeDialog }) => {
         <Input
           name='description'
           type='text'
+          min=''
+          max=''
           placeholder='Escribe la descripción'
           text='Descripción'
           required
@@ -68,7 +72,7 @@ const CreateDocumentDialog = ({ closeDialog }) => {
           <select
             name='type'
             required
-            className='py-2.5 px-0 bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block '
+            className='py-2.5 px-0 bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block'
           >
             <option disabled selected>
               Seleccione el encargado de subir el documento

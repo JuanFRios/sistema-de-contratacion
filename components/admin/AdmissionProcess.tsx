@@ -1,9 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-expressions */
-/* eslint-disable no-alert */
-/* eslint-disable no-sequences */
-/* eslint-disable react/no-unstable-nested-components */
-/* eslint-disable react/button-has-type */
-/* eslint-disable react/no-this-in-sfc */
 import { useMutation, useQuery } from '@apollo/client';
 import { GET_ADMISSIONPROCESS_BY_CANDIDATE } from 'graphql/queries/admissionProcess';
 import Image from 'next/image';
