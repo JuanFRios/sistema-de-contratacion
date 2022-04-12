@@ -3,10 +3,17 @@ import { ButtonLoading } from '@components/utils/ButtonLoading';
 import Input from '@components/utils/Input';
 import { CREATE_DOCUMENT } from 'graphql/mutations/document';
 import useFormData from 'hooks/useFormData';
-import React from 'react';
+import React, { useState } from 'react';
 import { toast } from 'react-toastify';
+import { Dialog } from '@mui/material';
+import ConfirmDialog from '@components/utils/ConfirmDialog';
 
 const CreateDocumentDialog = ({ closeDialog }) => {
+  const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
+
+  const closeConfirmDialog = () => {
+    setOpenConfirmDialog(false);
+  };
   const { form, formData, updateFormData } = useFormData(null);
   const [createDocument, { loading }] = useMutation(CREATE_DOCUMENT);
   const submitForm = async (e) => {
@@ -88,8 +95,14 @@ const CreateDocumentDialog = ({ closeDialog }) => {
         </label>
         <div className='w-full flex justify-center mt-4'>
           <ButtonLoading isSubmit text='Crear Documento' loading={loading} />
+          <button onClick={() => setOpenConfirmDialog(true)} type='button'>
+            ir
+          </button>
         </div>
       </form>
+      <Dialog open={openConfirmDialog} onClose={closeConfirmDialog}>
+        <ConfirmDialog closeDialog={closeConfirmDialog} formData={formData} />
+      </Dialog>
     </div>
   );
 };
