@@ -37,6 +37,9 @@ const Report = () => {
     xaxis: {
       categories: [],
     },
+    title: {
+      align: 'left',
+    },
   });
 
   const [series, setSeries] = useState([]);
@@ -55,9 +58,11 @@ const Report = () => {
 
   return (
     <div className='place-content-center'>
-      <h1 className='text-3xl text-slate-900 font-bold text-center m-4'>
-        Cantidad de documentos pendientes por cada proceso de contratación
-      </h1>
+      <div className='flex justify-center pt-12 pb-6 font-bold text-4xl'>
+        <p>
+          Cantidad de documentos pendientes por cada proceso de contratación
+        </p>
+      </div>
       <div className='w-11/12'>
         <ReactApexChart
           options={options}

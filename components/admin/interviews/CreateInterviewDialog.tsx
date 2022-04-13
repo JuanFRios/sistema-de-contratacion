@@ -103,11 +103,10 @@ const CreateInterviewDialog = ({ closeDialog, interviwerId }) => {
           <select
             name='admissionProcessId'
             required
+            defaultValue='Seleccione un candidato'
             className='py-1.5 px-0 bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block'
           >
-            <option disabled selected>
-              Seleccione un candidato
-            </option>
+            <option disabled>Seleccione un candidato</option>
             {admissionProcess.map((a) => (
               <option value={a.id} key={a.id}>
                 {a.candidate.name}

@@ -61,6 +61,11 @@ const Vacancies = () => {
             Nueva Vacante
           </Button>
         </div>
+        {data.getVacancies.length === 0 && (
+          <div className='flex w-full justify-center'>
+            <p>Aún no se han creado vacantes</p>
+          </div>
+        )}
         {data.getVacancies.map((v) => (
           <Vacancy
             key={v.id}

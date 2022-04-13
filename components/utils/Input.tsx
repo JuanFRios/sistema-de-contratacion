@@ -1,6 +1,15 @@
 import React from 'react';
 
-const Input = ({ text, name, placeholder, type, required, min, max }) => (
+const Input = ({
+  text,
+  name,
+  placeholder,
+  type,
+  required,
+  min,
+  max,
+  defaultValue = '',
+}) => (
   <label
     htmlFor={name}
     className='my-4 px-1 font-semibold text-gray-900 duration-300 peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 w-full'
@@ -14,6 +23,7 @@ const Input = ({ text, name, placeholder, type, required, min, max }) => (
       max={max || ''}
       required={required}
       autoComplete='off'
+      defaultValue={defaultValue}
       className='py-2.5 px-0 w-full text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-non focus:outline-none focus:ring-0 focus:border-blue-600 peer'
     />
   </label>

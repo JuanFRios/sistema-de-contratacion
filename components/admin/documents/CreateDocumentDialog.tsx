@@ -5,10 +5,13 @@ import useFormData from 'hooks/useFormData';
 import React from 'react';
 import { toast } from 'react-toastify';
 import { ButtonLoading } from '@components/utils/ButtonLoading';
+import { GET_DOCUMENTS } from 'graphql/queries/document';
 
 const CreateDocumentDialog = ({ closeDialog }) => {
   const { form, formData, updateFormData } = useFormData(null);
-  const [createDocument, { loading }] = useMutation(CREATE_DOCUMENT);
+  const [createDocument, { loading }] = useMutation(CREATE_DOCUMENT, {
+    refetchQueries: [GET_DOCUMENTS],
+  });
   const submitForm = async (e) => {
     e.preventDefault();
     try {

@@ -4,7 +4,12 @@ import { GET_VACANCIES_BY_CANDIDATE } from 'graphql/queries/vacancy';
 import React, { useState } from 'react';
 import { matchRoles } from 'utils/matchRoles';
 import { useSession } from 'next-auth/react';
-import { Accordion, AccordionDetails, AccordionSummary } from '@mui/material';
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Tooltip,
+} from '@mui/material';
 import { AdmissionStatus, DocumentType } from '@utils/admissionProcess';
 import { GET_REQUIRED_DOCUMENTS } from 'graphql/queries/document';
 import { CREATE_OR_UPDATE_DOCUMENT_UPLOAD } from 'graphql/mutations/document';
@@ -121,9 +126,7 @@ const Vacancies = () => {
 const Interviews = ({ interviews }) => (
   <div>
     {interviews.length === 0 && (
-      <p className='w-full text-center'>
-        Aún no hay postulados para esta vacante
-      </p>
+      <p className='w-full text-center'>Aún no se han programa entrevistas</p>
     )}
     {interviews.map((i) => (
       <Interview key={i.id} interview={i} />
@@ -198,7 +201,13 @@ const DocumentInput = ({ document, admissionProcess, showInput }) => {
       <h6 className='mx-4 my-2'>
         {document.name} {document.signature ? '*' : ''}:
       </h6>
-      {uploaded.length > 0 && <div>Descargar</div>}
+      {uploaded.length > 0 && (
+        <Tooltip title='Descargar'>
+          <a href={document.fileurl} target='_blank' rel='noreferrer'>
+            <i className='fas fa-file text-2xl text-green-700 cursor-pointer' />
+          </a>
+        </Tooltip>
+      )}
       {showInput && (
         <div className='bg-slate-400 hover:border-gray-400 border-2 mx-2 rounded-lg text-center cursor-pointer'>
           <FileUpload

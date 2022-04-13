@@ -11,10 +11,13 @@ import { toast } from 'react-toastify';
 import LoadingComponent from '@components/utils/LoadingComponent';
 import { Button, Dialog } from '@mui/material';
 import Image from 'next/image';
+import { GET_CANDIDATES } from 'graphql/queries/user';
 
 const CreateCandidateDialog = ({ closeDialog, token }) => {
   const { form, formData, updateFormData } = useFormData(null);
-  const [createUser, { loading }] = useMutation(CREATE_USER_ACCOUNT);
+  const [createUser, { loading }] = useMutation(CREATE_USER_ACCOUNT, {
+    refetchQueries: [GET_CANDIDATES],
+  });
   const { data: vacancies, loading: loadingVacancies } = useQuery(
     GET_SIMPLE_VACANCIES,
     {
@@ -57,6 +60,11 @@ const CreateCandidateDialog = ({ closeDialog, token }) => {
         },
       });
       setopenPassword(true);
+      toast.success(`Usuario creado correctamente con la clave ${password}*`, {
+        autoClose: false,
+      });
+      console.log(`${password}*`);
+      closeDialog();
     } catch (error) {
       toast.error('Error creando el usuario');
       closeDialog();
