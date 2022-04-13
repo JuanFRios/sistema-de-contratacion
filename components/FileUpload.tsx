@@ -19,7 +19,7 @@ const FileUpload = ({
       border: 'none',
       width: '120px',
       borderRadius: '4px',
-      height: '25px',
+      height: '15px',
     }} // inline styling only or style id='cloudinary_upload_button'
     folder={folder} // set cloudinary folder name to send file
     autoClose={false} // will close the widget after success. Default true

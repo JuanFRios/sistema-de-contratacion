@@ -1,8 +1,10 @@
 import React from 'react';
+// import React, { useState, useEffect } from 'react';
 import { matchRoles } from 'utils/matchRoles';
 // import dynamic from 'next/dynamic';
 // import { useQuery } from '@apollo/client';
 // import { GET_CHART_DATA } from 'graphql/queries/chart';
+// import LoadingComponent from '@components/utils/LoadingComponent';
 
 // const ReactApexChart = dynamic(
 //   // eslint-disable-next-line arrow-body-style
@@ -22,12 +24,10 @@ const Report = () => (
   // const { data, loading } = useQuery(GET_CHART_DATA);
 
   // const [options, setOptions] = useState({
-  //   chart: {
-  //     type: 'bar',
-  //     height: 400,
-  //   },
+  //   chart: {},
   //   plotOptions: {
   //     bar: {
+  //       distributed: true,
   //       borderRadius: 4,
   //       horizontal: true,
   //     },
@@ -37,6 +37,9 @@ const Report = () => (
   //   },
   //   xaxis: {
   //     categories: [],
+  //   },
+  //   title: {
+  //     align: 'left',
   //   },
   // });
 
@@ -50,22 +53,27 @@ const Report = () => (
   //       xaxis: { ...options.xaxis, categories: data.getChartData.categories },
   //     });
   //   }
-  // }, [data, options]);
-
-  // if (loading) return <div>Loading...</div>;
+  //   console.log(data);
+  // }, [data]);
+  // if (loading) return <LoadingComponent />;
 
   <div className='place-content-center'>
-    <h1 className='text-3xl text-slate-900 font-bold text-center m-4'>
-      Cantidad de documentos pendientes por cada proceso de contratación
-    </h1>
-    <div className='w-11/12'>
-      {/* <ReactApexChart
-          options={options}
-          series={series}
-          type='bar'
-          height={350}
-        /> */}
+    <div className='flex justify-center pt-12 pb-6 font-bold text-4xl'>
+      <p>
+        La gráfica funciona en local pero al desplegar falla la compilación.
+      </p>
     </div>
+    {/* <div className='flex justify-center pt-12 pb-6 font-bold text-4xl'>
+      <p>Cantidad de documentos pendientes por cada proceso de contratación</p>
+    </div> */}
+    {/* <div className='w-11/12'>
+      <ReactApexChart
+        options={options}
+        series={series}
+        type='bar'
+        height={350}
+      />
+    </div> */}
   </div>
 );
 export default Report;

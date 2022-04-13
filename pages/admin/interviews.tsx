@@ -35,12 +35,10 @@ const Interviews = () => {
   if (loading) return <LoadingComponent />;
 
   return (
-    <div>
-      <div className='w-full lg:w-11/12'>
-        <div>
-          <h1 className='flex justify-center pt-12 pb-6 font-bold text-4xl'>
-            Candidatos
-          </h1>
+    <div className='flex justify-center'>
+      <div className='w-full lg:w-11/12 '>
+        <div className='flex justify-center pt-12 pb-6 font-bold text-4xl'>
+          <p>Entrevistas</p>
         </div>
         <div className='m-4 pb-6 flex justify-end text-9xl'>
           <Button
@@ -53,6 +51,11 @@ const Interviews = () => {
             Nueva entrevista
           </Button>
         </div>
+        {data.getInterviewsByInterviewerId.length === 0 && (
+          <div className='flex w-full justify-center'>
+            <p>Aún no se han creado entrevistas</p>
+          </div>
+        )}
         <div className='flex flex-col items-center'>
           {data.getInterviewsByInterviewerId.map((i) => (
             <InterviewItem key={i.id} interview={i} />

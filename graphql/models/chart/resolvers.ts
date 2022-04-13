@@ -3,21 +3,21 @@ import prisma from 'config/prisma';
 const ChartResolvers = {
   Query: {
     getChartData: async (parent, args) => {
-      let admissionProcessesList = [];
-      let numberOfPendingDocumentsPerAdmissionProcess = [];
+      const admissionProcessesList = [];
+      const numberOfPendingDocumentsPerAdmissionProcess = [];
 
       const admissionProcesses = await prisma.admissionProcess.findMany({
         where: {
-          status: 'Hiring_Phase'
+          status: 'Hiring_Phase',
         },
         include: {
-          candidate: true
-        }
-      });     
-      for (let admissionProcess of admissionProcesses) {
+          candidate: true,
+        },
+      });
+      for (const admissionProcess of admissionProcesses) {
         const { vacancyId, id, candidate } = admissionProcess;
-        const { email } = candidate; 
-        
+        const { email } = candidate;
+
         const vacancy = await prisma.vacancy.findUnique({
           where: {
             id: vacancyId,
@@ -26,23 +26,28 @@ const ChartResolvers = {
             documents: true,
           },
         });
-        let vacancyName = vacancy.position;
-        let admissionProcessCategory = `${vacancyName} - ${email}`;
+        const vacancyName = vacancy.position;
+        const admissionProcessCategory = `${vacancyName} - ${email}`;
         admissionProcessesList.push(admissionProcessCategory);
-        let numberOfVacancyDocuments = vacancy.documents.length;
+        const numberOfVacancyDocuments = vacancy.documents.length;
         const uploadedDocuments = await prisma.uploadedDocument.findMany({
           where: {
-            admissionProcessId: id
+            admissionProcessId: id,
           },
         });
-        let numberOfUploadedDocuments = uploadedDocuments.length;
-        let numberOfPendingDocuments = numberOfVacancyDocuments - numberOfUploadedDocuments;
-        numberOfPendingDocumentsPerAdmissionProcess.push(numberOfPendingDocuments);
+        const numberOfUploadedDocuments = uploadedDocuments.length;
+        const numberOfPendingDocuments =
+          numberOfVacancyDocuments - numberOfUploadedDocuments;
+        numberOfPendingDocumentsPerAdmissionProcess.push(
+          numberOfPendingDocuments
+        );
       }
       return {
-        series: [{
-          data: numberOfPendingDocumentsPerAdmissionProcess
-        }],
+        series: [
+          {
+            data: numberOfPendingDocumentsPerAdmissionProcess,
+          },
+        ],
         categories: admissionProcessesList,
       };
     },

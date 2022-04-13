@@ -1,14 +1,17 @@
 import { useMutation } from '@apollo/client';
-import { ButtonLoading } from '@components/utils/ButtonLoading';
 import Input from '@components/utils/Input';
 import { CREATE_DOCUMENT } from 'graphql/mutations/document';
 import useFormData from 'hooks/useFormData';
 import React from 'react';
 import { toast } from 'react-toastify';
+import { ButtonLoading } from '@components/utils/ButtonLoading';
+import { GET_DOCUMENTS } from 'graphql/queries/document';
 
 const CreateDocumentDialog = ({ closeDialog }) => {
   const { form, formData, updateFormData } = useFormData(null);
-  const [createDocument, { loading }] = useMutation(CREATE_DOCUMENT);
+  const [createDocument, { loading }] = useMutation(CREATE_DOCUMENT, {
+    refetchQueries: [GET_DOCUMENTS],
+  });
   const submitForm = async (e) => {
     e.preventDefault();
     try {
@@ -43,6 +46,8 @@ const CreateDocumentDialog = ({ closeDialog }) => {
         <Input
           name='name'
           type='text'
+          min=''
+          max=''
           placeholder='Escribe el nombre del documento'
           text='Nombre'
           required
@@ -50,6 +55,8 @@ const CreateDocumentDialog = ({ closeDialog }) => {
         <Input
           name='description'
           type='text'
+          min=''
+          max=''
           placeholder='Escribe la descripción'
           text='Descripción'
           required
@@ -58,10 +65,11 @@ const CreateDocumentDialog = ({ closeDialog }) => {
           htmlFor='type'
           className='my-4 font-semibold text-gray-900 duration-300 peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500'
         >
+          <span className='mx-2 my-4'>Encargado de subir el documento</span>
           <select
             name='type'
             required
-            className='py-2.5 px-0 bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block '
+            className='py-1.5 px-0 bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block'
           >
             <option disabled selected>
               Seleccione el encargado de subir el documento
@@ -74,10 +82,11 @@ const CreateDocumentDialog = ({ closeDialog }) => {
           htmlFor='signature'
           className='my-4 font-semibold text-gray-900 duration-300 peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500'
         >
+          <span className='mx-2'>Firma</span>
           <select
             name='signature'
             required
-            className='py-2.5 px-0 bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block '
+            className='py-1.5 px-0 bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block '
           >
             <option disabled selected>
               El documento requiere firma del candidato

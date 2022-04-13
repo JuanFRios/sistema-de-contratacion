@@ -1,5 +1,3 @@
-/* eslint-disable @next/next/link-passhref */
-// eslint-disable-next-line @next/next/link-passhref
 import React from 'react';
 import Image from 'next/image';
 import { Button } from '@mui/material';

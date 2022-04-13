@@ -64,6 +64,7 @@ const Index = ({ token }) => {
 const CreateUserDialog = ({ closeDialog, token }) => {
   const { form, formData, updateFormData } = useFormData(null);
   const [createUser, { loading }] = useMutation(CREATE_USER_ACCOUNT);
+  console.log(token);
 
   const submitForm = async (e) => {
     e.preventDefault();

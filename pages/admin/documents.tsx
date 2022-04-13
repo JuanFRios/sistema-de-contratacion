@@ -42,6 +42,11 @@ const Documents = () => {
             Nuevo Documento
           </Button>
         </div>
+        {data.getDocuments.length === 0 && (
+          <div className='flex w-full justify-center'>
+            <p>Aún no se han creado documentos</p>
+          </div>
+        )}
         <div className='flex flex-wrap justify-center'>
           {data.getDocuments.map((d) => (
             <DocumentItem key={d.id} document={d} />

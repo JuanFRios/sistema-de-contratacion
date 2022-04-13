@@ -1,9 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-expressions */
-/* eslint-disable no-alert */
-/* eslint-disable no-sequences */
-/* eslint-disable react/no-unstable-nested-components */
-/* eslint-disable react/button-has-type */
-/* eslint-disable react/no-this-in-sfc */
 import { useMutation, useQuery } from '@apollo/client';
 import { GET_ADMISSIONPROCESS_BY_CANDIDATE } from 'graphql/queries/admissionProcess';
 import Image from 'next/image';
@@ -13,7 +7,7 @@ import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 // import StepContent from '@mui/material/StepContent';
-import { Button } from '@mui/material';
+import { Button, Dialog, Tooltip } from '@mui/material';
 import FileUpload from '@components/FileUpload';
 // import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
@@ -29,6 +23,7 @@ import {
   decodeStep,
 } from '@utils/admissionProcess';
 import LoadingComponent from '@components/utils/LoadingComponent';
+import ConfirmDialog from '@components/utils/ConfirmDialog';
 
 const AdmissionProcess = ({ closeDialog, admissionProcessId }) => {
   const { data: admissionProcess, loading } = useQuery(
@@ -66,7 +61,7 @@ const AdmissionProcess = ({ closeDialog, admissionProcessId }) => {
           Proceso de admisión{' '}
           {admissionProcess.getAdmissionProcess.vacancy.position}
         </div>
-        <div className='h-full overflow-auto'>
+        <div className='h-full overflow-y-auto'>
           <BodyAdmissionProcess
             admissionProcess={admissionProcess.getAdmissionProcess}
           />
@@ -86,7 +81,9 @@ const BodyAdmissionProcess = ({ admissionProcess }) => {
   const [activeStep, setActiveStep] = useState(
     decodeStep(admissionProcess.status)
   );
-  const [changeStatus] = useMutation(CHANGE_STATUS_ADMISSION_PROCESS);
+  const [changeStatus] = useMutation(CHANGE_STATUS_ADMISSION_PROCESS, {
+    refetchQueries: [GET_ADMISSIONPROCESS_BY_CANDIDATE],
+  });
 
   if (admissionProcess.status === AdmissionStatus.FASE_ENTREVISTAS) {
     // setActiveStep(0);
@@ -126,15 +123,30 @@ const BodyAdmissionProcess = ({ admissionProcess }) => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
+  const [OpenConfirmDialogDiscard, setOpenConfirmDialogDiscard] =
+    useState(false);
+
+  const closeConfirmDialogDiscard = () => {
+    setOpenConfirmDialogDiscard(false);
+  };
+
+  const [OpenConfirmDialogContinue, setOpenConfirmDialogContinue] =
+    useState(false);
+
+  const closeConfirmDialogContinue = () => {
+    setOpenConfirmDialogContinue(false);
+  };
+
   if (activeStep === -1) {
     return (
       <>
-        <Typography sx={{ mt: 2, mb: 1 }}>
-          EL usuario ha sido descartado para la vacante
+        <Typography sx={{ mt: 2, mb: 2, color: 'red', fontSize: '18px' }}>
+          El usuario ha sido descartado para la vacante
         </Typography>
       </>
     );
   }
+  console.log('first', admissionProcess);
 
   return (
     <Box sx={{ width: '100%' }}>
@@ -153,8 +165,10 @@ const BodyAdmissionProcess = ({ admissionProcess }) => {
                     height: '35px',
                   },
                   '& .MuiStepLabel-label ': {
-                    marginTop: '2.5px',
                     fontSize: '1rem',
+                  },
+                  '& .MuiStepLabel-alternativeLabel': {
+                    marginTop: '3px',
                   },
                 }}
                 {...labelProps}
@@ -167,12 +181,15 @@ const BodyAdmissionProcess = ({ admissionProcess }) => {
       </Stepper>
       {activeStep === 0 && (
         <>
-          <div className='h-fit overflow-auto mt-4 mt-'>
-            <InterviewDeatail />
-            <InterviewDeatail />
-            <InterviewDeatail />
-            <InterviewDeatail />
-            <InterviewDeatail />
+          <div className='h-fit overflow-y-auto mt-4 mt-'>
+            {admissionProcess.interviews.length === 0 && (
+              <div>
+                <p>Aún no se le han realizado entrevistas al candidato</p>
+              </div>
+            )}
+            {admissionProcess.interviews.map((i) => (
+              <InterviewDeatail key={i.id} interview={i} />
+            ))}
           </div>
           <div className='pt-3'>
             <Box sx={{ display: 'contents', flexDirection: 'column' }}>
@@ -181,7 +198,7 @@ const BodyAdmissionProcess = ({ admissionProcess }) => {
                 <Button
                   variant='contained'
                   color='error'
-                  onClick={handleDiscard}
+                  onClick={() => setOpenConfirmDialogDiscard(true)}
                   sx={{ mr: 1 }}
                 >
                   Descartar
@@ -190,7 +207,16 @@ const BodyAdmissionProcess = ({ admissionProcess }) => {
               <Button
                 variant='contained'
                 color='success'
-                onClick={handleFinishInterviews}
+                onClick={() => {
+                  if (
+                    admissionProcess.status !==
+                    AdmissionStatus.FASE_CONTRATACION
+                  ) {
+                    setOpenConfirmDialogContinue(true);
+                  } else {
+                    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+                  }
+                }}
               >
                 {admissionProcess.status !== AdmissionStatus.FASE_CONTRATACION
                   ? 'Terminar entrevistas'
@@ -198,13 +224,42 @@ const BodyAdmissionProcess = ({ admissionProcess }) => {
               </Button>
             </Box>
           </div>
+          <div className='w-full flex justify-center mt-4'>
+            <Dialog
+              open={OpenConfirmDialogDiscard}
+              onClose={closeConfirmDialogDiscard}
+            >
+              <ConfirmDialog
+                closeDialog={closeConfirmDialogDiscard}
+                onConfirm={handleDiscard}
+                loading=''
+                message='¿Seguro que desea descartar este candidato?'
+              />
+            </Dialog>
+            <Dialog
+              open={OpenConfirmDialogContinue}
+              onClose={closeConfirmDialogContinue}
+            >
+              <ConfirmDialog
+                closeDialog={closeConfirmDialogContinue}
+                onConfirm={handleFinishInterviews}
+                loading=''
+                message='¿Seguro que desea continuar a la fase de contratacion al candidato?'
+              />
+            </Dialog>
+          </div>
         </>
       )}
       {activeStep === 1 && (
         <>
           <DocumentsHire admissionProcess={admissionProcess} />
           <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-            <Button color='inherit' onClick={handleBack} sx={{ mr: 1 }}>
+            <Button
+              color='success'
+              variant='contained'
+              onClick={handleBack}
+              sx={{ mr: 1 }}
+            >
               Ver entrevistas
             </Button>
             <Box sx={{ flex: '1 1 auto' }} />
@@ -222,10 +277,13 @@ const DocumentsHire = ({ admissionProcess }) => {
   }
   return (
     <div>
-      <div>
+      <div className='text-lg text-justify font-normal m-2 my-4'>
         Para finalizar el proceso de admisión Joinus debe adjuntar los
-        siguientes documentos y los marcados con rojo deben ser firmados por el
-        candidato:
+        siguientes documentos y{' '}
+        <b>
+          los documentos marcados con asterisco deben ser firmados por el
+          candidato
+        </b>
       </div>
       {documents.getDocuments.map((document) => {
         if (document.type === DocumentType.COMPANY) {
@@ -240,18 +298,20 @@ const DocumentsHire = ({ admissionProcess }) => {
         }
         return null;
       })}
-      <div>
+      <div className='text-lg text-justify font-normal m-2 my-4'>
         De igual forma el usuario debe cargar los siguientes documentos:
       </div>
       {documents.getDocuments.map((document) => {
         if (document.type === DocumentType.CANDIDATE) {
           return (
-            <DocumentInput
-              key={document.id}
-              document={document}
-              admissionProcess={admissionProcess}
-              showInput={false}
-            />
+            <div>
+              <DocumentInput
+                key={document.id}
+                document={document}
+                admissionProcess={admissionProcess}
+                showInput
+              />
+            </div>
           );
         }
         return null;
@@ -285,13 +345,20 @@ const DocumentInput = ({ document, admissionProcess, showInput }) => {
     toast.error('error uploading file');
   };
   return (
-    <div className='flex font-bold'>
-      <h6 className='mx-4 my-2'>
-        {document.name} {document.signature ? '*' : ''}:
+    <div className='flex font-bold justify-between'>
+      <h6 className='mx-4 my-2 text-xl'>
+        {document.name}
+        {document.signature ? '*' : ''}
       </h6>
-      {uploaded.length > 0 && <div>Descargar</div>}
+      {uploaded.length > 0 && (
+        <Tooltip title='Descargar'>
+          <a href={uploaded[0].fileUrl} target='_blank' rel='noreferrer'>
+            <i className='fas fa-download text-2xl text-green-700 cursor-pointer' />
+          </a>
+        </Tooltip>
+      )}
       {showInput && (
-        <div className=' bg-slate-400 hover:border-gray-400 border-2 mx-2 rounded-lg text-center cursor-pointer'>
+        <div className='flex items-center bg-slate-400 hover:border-gray-400 border-2 rounded-lg cursor-pointer '>
           <FileUpload
             folder='documents'
             text='Elegir'
@@ -306,11 +373,11 @@ const DocumentInput = ({ document, admissionProcess, showInput }) => {
   );
 };
 
-const InterviewDeatail = () => (
+const InterviewDeatail = ({ interview }) => (
   <div className='flex pb-4'>
     <div className='flex items-center'>
       <Image
-        src='https://res.cloudinary.com/proyecto-integrador-udea-2022/image/upload/v1647726660/Screenshot_from_2022-03-19_16-50-20_kqfsoy.png'
+        src={findImage(interview.interviewer)}
         alt='Perfil admin'
         height={60}
         width={60}
@@ -321,16 +388,11 @@ const InterviewDeatail = () => (
     <div className='flex flex-col items-start w-full pl-4'>
       <p>
         {' '}
-        <b>Juan Fernando Ríos</b> hizo un comentario en{' '}
-        <b>entrevista sicológica</b>
+        <b>{interview.interviewer.name}</b> hizo un comentario en{' '}
+        <b>{interview.name}</b>
       </p>
-      <div className='text-justify border-2 rounded-lg border-slate-500'>
-        <p className='p-1'>
-          El candidato es una persona tímida y poco expresiva El candidato es
-          una persona tímida y poco expresiva El candidato es una persona tímida
-          y poco expresiva El candidato es una persona tímida y poco expresiva
-          El candidato es una persona tímida y poco expresiva{' '}
-        </p>
+      <div className='text-justify border-2 rounded-lg border-slate-500 w-full'>
+        <p className='p-1'>{interview.notes}</p>
       </div>
     </div>
   </div>

@@ -6,7 +6,7 @@ import { useRouter } from 'next/router';
 import Image from 'next/image';
 import { adminMenuOptions, candidateMenuOptions } from 'utils/menu';
 import { signOut, useSession } from 'next-auth/react';
-import { findImage } from '../utils/admissionProcess';
+import { findImage } from '@utils/admissionProcess';
 
 const Sidebar = ({ child }: any) => {
   const [showResponsiveSidebar, setShowResponsiveSidebar] = useState(false);
@@ -29,12 +29,14 @@ const Sidebar = ({ child }: any) => {
             </div>
           </div>
           {showResponsiveSidebar && (
-            <nav className='flex items-center bg-white border-y-2'>
+            <nav className='flex flex-col divide-y-2 items-center bg-white border-y-2'>
               <MenuOptions />
+              <ProfileMobile />
+              <LogoutMobile />
             </nav>
           )}
         </div>
-        <div className='pt-20 w-full h-screen'>
+        <div className='pt-24 w-full h-screen'>
           <div className='bg-slate-100 w-full h-full overflow-auto'>
             {child}
           </div>
@@ -150,6 +152,43 @@ const LinkNavigation = ({ text, route, icon }) => {
         </div>
       </Link>
     </li>
+  );
+};
+
+const LogoutMobile = () => (
+  <div className='flex w-full justify-center'>
+    <button type='button' onClick={() => signOut()}>
+      <i className='fa-solid fa-door-open' />
+      <span className='ml-2 font-semibold text-xl'>Cerrar Sesion</span>
+    </button>
+  </div>
+);
+
+const ProfileMobile = () => {
+  const { data: session }: any = useSession();
+  const image = findImage(session.user);
+  const router = useRouter();
+  return (
+    <div
+      className={
+        router.pathname === '/users/updateUser'
+          ? 'active linkNavigation'
+          : 'linkNavigation'
+      }
+    >
+      <Link href='/users/updateUser'>
+        <div className='w-full hover:cursor-pointer flex items-center ml-2'>
+          <Image
+            src={image}
+            alt='User Profile'
+            height={20}
+            width={20}
+            className='rounded-full'
+          />
+          <span className='ml-2'>{session.user.name}</span>
+        </div>
+      </Link>
+    </div>
   );
 };
 

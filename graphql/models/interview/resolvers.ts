@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable arrow-body-style */
 import prisma from 'config/prisma';
 
 const InterviewResolvers = {
@@ -28,26 +30,28 @@ const InterviewResolvers = {
     getInterviewsByInterviewerId: async (parent, args) => {
       return await prisma.interview.findMany({
         where: {
-          interviewerId: args.where.interviewerId
-        }
+          interviewerId: args.where.interviewerId,
+        },
       });
-    }
+    },
   },
   Mutation: {
-    createInterview: async (parent, args) =>
-      await prisma.interview.create({
+    createInterview: async (parent, args) => {
+      console.log(args);
+      return await prisma.interview.create({
         data: {
           ...args.data,
           date: new Date(args.data.date),
-          status: "NotCompleted"
+          status: 'NotCompleted',
         },
-      }),
+      });
+    },
     completeInterview: async (parent, args) => {
       return await prisma.interview.update({
         where: { ...args.where },
         data: {
           ...args.data,
-          status: 'Completed'
+          status: 'Completed',
         },
       });
     },

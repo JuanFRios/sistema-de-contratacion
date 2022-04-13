@@ -17,5 +17,5 @@ export const resolvers = [
   InterviewResolvers,
   ProfileResolvers,
   UploadedDocumentResolvers,
-  ChartResolvers
+  ChartResolvers,
 ];

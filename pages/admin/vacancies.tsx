@@ -1,5 +1,4 @@
 import { useMutation, useQuery } from '@apollo/client';
-import { ButtonLoading } from '@components/utils/ButtonLoading';
 import Input from '@components/utils/Input';
 import LoadingComponent from '@components/utils/LoadingComponent';
 import {
@@ -15,10 +14,12 @@ import useFormData from 'hooks/useFormData';
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import { matchRoles } from 'utils/matchRoles';
-// eslint-disable-next-line import/no-named-as-default
 import AdmissionProcess from '@components/admin/AdmissionProcess';
 import { AdmissionStatus, findImage } from '@utils/admissionProcess';
 import Image from 'next/image';
+import moment from 'moment';
+// import ConfirmDialog from '@components/utils/ConfirmDialog';
+import { ButtonLoading } from '@components/utils/ButtonLoading';
 
 export async function getServerSideProps(context) {
   return {
@@ -60,6 +61,11 @@ const Vacancies = () => {
             Nueva Vacante
           </Button>
         </div>
+        {data.getVacancies.length === 0 && (
+          <div className='flex w-full justify-center'>
+            <p>Aún no se han creado vacantes</p>
+          </div>
+        )}
         {data.getVacancies.map((v) => (
           <Vacancy
             key={v.id}
@@ -102,7 +108,7 @@ const Vacancy = ({ vacancy, expanded, handleChange }) => {
                 setOpenInfoDialog(true);
               }}
             >
-              <i className='fa-solid fa-ellipsis mx-4 text-blue-600 text-2xl' />
+              <i className='fa-solid fa-info mx-4 text-blue-600 text-2xl' />
             </button>
           </div>
         </AccordionSummary>
@@ -193,36 +199,57 @@ const ItemContratationProcess = ({ admissionProcess }) => {
     </>
   );
 };
+const numberFormat = (value) =>
+  new Intl.NumberFormat('es-CO', {
+    style: 'currency',
+    currency: 'COP',
+    minimumFractionDigits: 0,
+  }).format(value);
 
 const VacancyDetail = ({ closeDialog, vacancy }) => (
   <div className='p-10 flex flex-col items-start w-full'>
-    <h2 className='my-3 mb-2 text-2xl font-extrabold text-gray-900 w-full text-center'>
+    <h2 className='my-3 mb-2 text-2xl font-bold text-gray-900 w-full text-center'>
       {vacancy.position}
     </h2>
-    <p>
-      {' '}
-      <b>Rango salarial: </b> {vacancy.minimumSalary} - {vacancy.maximumSalary}
-    </p>
-    <p>
-      {' '}
-      <b>Fecha de ingreso: </b> {vacancy.startDate}
-    </p>
-    <p>
-      {' '}
-      <b>Número máximo de aspirantes: </b> {vacancy.candidatesQuantity}
-    </p>
+    <div className='text-lg py-3'>
+      <p>
+        {' '}
+        <b>Descripción: </b> {vacancy.description}
+      </p>
+      <p>
+        {' '}
+        <b>Rango salarial: </b> {numberFormat(vacancy.minimumSalary)} -{' '}
+        {numberFormat(vacancy.maximumSalary)}
+      </p>
+      <p>
+        {' '}
+        <b>Fecha de ingreso: </b>{' '}
+        {moment(vacancy.startDate).format('DD-MM-YYYY')}
+      </p>
+      <p>
+        {' '}
+        <b>Número máximo de aspirantes: </b> {vacancy.candidatesQuantity}
+      </p>
+    </div>
 
     <div className='w-full flex justify-center mt-4'>
-      <button type='button' onClick={closeDialog}>
+      <Button variant='contained' type='button' onClick={closeDialog}>
         Cerrar
-      </button>
+      </Button>
     </div>
   </div>
 );
 
 const NewVacancy = ({ closeDialog }) => {
   const { form, formData, updateFormData } = useFormData(null);
-  const [createVacancy, { loading }] = useMutation(CREATE_VACANCY);
+  const [createVacancy, { loading }] = useMutation(CREATE_VACANCY, {
+    refetchQueries: [GET_VACANCIES],
+  });
+  // const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
+
+  // const closeConfirmDialog = () => {
+  //   setOpenConfirmDialog(false);
+  // };
   const submitForm = async (e) => {
     e.preventDefault();
     await createVacancy({
@@ -237,12 +264,12 @@ const NewVacancy = ({ closeDialog }) => {
         },
       },
     });
-    toast.success(`Cliente modificado exitosamente`);
+    toast.success(`Vacante creada exitosamente`);
     closeDialog();
   };
   return (
     <div className='p-10 flex flex-col items-center w-full'>
-      <h2 className='my-3 mb-2 text-2xl font-extrabold text-gray-900'>
+      <h2 className='my-3 mb-2 text-2xl font-bold text-gray-900'>
         Nueva Vacante
       </h2>
       <form
@@ -254,13 +281,17 @@ const NewVacancy = ({ closeDialog }) => {
         <Input
           name='position'
           type='text'
-          placeholder='Escribe el nombre de a vacante'
+          min=''
+          max=''
+          placeholder='Escribe el nombre de la vacante'
           text='Nombre de la vacante'
           required
         />
         <Input
           name='description'
           type='text'
+          min=''
+          max=''
           placeholder='Escribe la descripción'
           text='Descripción'
           required
@@ -269,14 +300,18 @@ const NewVacancy = ({ closeDialog }) => {
           <Input
             name='minimumSalary'
             type='number'
-            placeholder='Escribe valor mínimo del salario'
+            min='1'
+            max=''
+            placeholder='Escribe el valor mínimo del salario'
             text='Base salarial'
             required
           />
           <Input
             name='maximumSalary'
             type='number'
-            placeholder='Escribe valor máximo del salario'
+            min='1'
+            max=''
+            placeholder='Escribe el valor máximo del salario'
             text='Salario máximo'
             required
           />
@@ -285,6 +320,8 @@ const NewVacancy = ({ closeDialog }) => {
           <Input
             name='candidatesQuantity'
             type='number'
+            min='1'
+            max=''
             placeholder='Escribe el número máximo de candidatos'
             text='Número de candidatos'
             required
@@ -292,15 +329,38 @@ const NewVacancy = ({ closeDialog }) => {
           <Input
             name='startDate'
             type='date'
+            min={moment().format('YYYY-MM-DD')}
+            max=''
             placeholder='Escribe la fecha'
             text='Fecha de inicio de labores'
             required
           />
         </div>
-        <div className='w-full flex justify-center mt-4'>
-          <ButtonLoading isSubmit text='Crear Documento' loading={loading} />
+        <div className='w-full flex justify-between mt-4'>
+          <Button variant='contained' type='button' onClick={closeDialog}>
+            Cerrar
+          </Button>
+          {/* <Button
+            variant='contained'
+            color='success'
+            type='button'
+            onClick={() => setOpenConfirmDialog(true)}
+          >
+            Crear vacante
+          </Button> */}
+          <ButtonLoading isSubmit text='Crear vacante' loading={loading} />
         </div>
       </form>
+      {/* <div className='w-full flex justify-center mt-4'>
+        <Dialog open={openConfirmDialog} onClose={closeConfirmDialog}>
+          <ConfirmDialog
+            closeDialog={closeConfirmDialog}
+            onConfirm={submitForm}
+            loading={loading}
+            message='¿Seguro que desea crear esta vacante?'
+          />
+        </Dialog>
+      </div> */}
     </div>
   );
 };
