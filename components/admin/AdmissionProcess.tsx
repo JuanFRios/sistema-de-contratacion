@@ -207,7 +207,16 @@ const BodyAdmissionProcess = ({ admissionProcess }) => {
               <Button
                 variant='contained'
                 color='success'
-                onClick={() => setOpenConfirmDialogContinue(true)}
+                onClick={() => {
+                  if (
+                    admissionProcess.status !==
+                    AdmissionStatus.FASE_CONTRATACION
+                  ) {
+                    setOpenConfirmDialogContinue(true);
+                  } else {
+                    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+                  }
+                }}
               >
                 {admissionProcess.status !== AdmissionStatus.FASE_CONTRATACION
                   ? 'Terminar entrevistas'
@@ -289,13 +298,13 @@ const DocumentsHire = ({ admissionProcess }) => {
         }
         return null;
       })}
+      <div className='text-lg text-justify font-normal m-2 my-4'>
+        De igual forma el usuario debe cargar los siguientes documentos:
+      </div>
       {documents.getDocuments.map((document) => {
         if (document.type === DocumentType.CANDIDATE) {
           return (
             <div>
-              <div className='text-lg text-justify font-normal m-2 my-4'>
-                De igual forma el usuario debe cargar los siguientes documentos:
-              </div>
               <DocumentInput
                 key={document.id}
                 document={document}

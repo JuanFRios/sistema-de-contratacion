@@ -214,6 +214,10 @@ const VacancyDetail = ({ closeDialog, vacancy }) => (
     <div className='text-lg py-3'>
       <p>
         {' '}
+        <b>Descripción: </b> {vacancy.description}
+      </p>
+      <p>
+        {' '}
         <b>Rango salarial: </b> {numberFormat(vacancy.minimumSalary)} -{' '}
         {numberFormat(vacancy.maximumSalary)}
       </p>
