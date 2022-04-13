@@ -38,6 +38,7 @@ const Candidates = ({ token }) => {
   });
 
   if (loading) return <LoadingComponent />;
+  console.log(data);
 
   return (
     <div className='flex justify-center'>
@@ -58,6 +59,11 @@ const Candidates = ({ token }) => {
             Nuevo Candidato
           </Button>
         </div>
+        {data.getCandidates.length === 0 && (
+          <div className='flex w-full justify-center'>
+            <p>Aún no se han creado candidatos</p>
+          </div>
+        )}
         <div className='flex flex-wrap justify-center'>
           {data.getCandidates.map((c) => (
             <CandidateItem key={c.id} candidate={c} />

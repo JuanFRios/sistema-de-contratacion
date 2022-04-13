@@ -6,6 +6,7 @@ import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import { Dialog } from '@mui/material';
 import ConfirmDialog from '@components/utils/ConfirmDialog';
+import { GET_DOCUMENTS } from 'graphql/queries/document';
 
 const CreateDocumentDialog = ({ closeDialog }) => {
   const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
@@ -14,7 +15,9 @@ const CreateDocumentDialog = ({ closeDialog }) => {
     setOpenConfirmDialog(false);
   };
   const { form, formData, updateFormData } = useFormData(null);
-  const [createDocument, { loading }] = useMutation(CREATE_DOCUMENT);
+  const [createDocument, { loading }] = useMutation(CREATE_DOCUMENT, {
+    refetchQueries: [GET_DOCUMENTS],
+  });
   const submitForm = async (e) => {
     e.preventDefault();
     try {

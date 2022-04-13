@@ -23,8 +23,7 @@ const Report = () => {
   const { data, loading } = useQuery(GET_CHART_DATA);
 
   const [options, setOptions] = useState({
-    chart: {
-    },
+    chart: {},
     plotOptions: {
       bar: {
         borderRadius: 4,

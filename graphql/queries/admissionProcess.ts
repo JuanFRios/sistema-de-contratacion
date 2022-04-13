@@ -17,6 +17,7 @@ const GET_ADMISSIONPROCESS_BY_CANDIDATE = gql`
       }
       status
       interviews {
+        id
         name
         interviewer {
           name

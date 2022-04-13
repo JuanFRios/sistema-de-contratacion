@@ -53,6 +53,11 @@ const Interviews = () => {
             Nueva entrevista
           </Button>
         </div>
+        {data.getInterviewsByInterviewerId.length === 0 && (
+          <div className='flex w-full justify-center'>
+            <p>Aún no se han creado entrevistas</p>
+          </div>
+        )}
         <div className='flex flex-col items-center'>
           {data.getInterviewsByInterviewerId.map((i) => (
             <InterviewItem key={i.id} interview={i} />

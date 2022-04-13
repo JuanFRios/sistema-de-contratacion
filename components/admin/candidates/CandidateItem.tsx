@@ -23,18 +23,20 @@ const CandidateItem = ({ candidate }) => (
               {candidate.name}
             </p>
           </div>
-          <p className='flex font-semibold'>
-            Documento:
-            <p className='ml-2 font-normal'>{candidate.identification}</p>
-          </p>
-          <p className='flex font-semibold'>
-            Correo:
+          <div className='flex'>
+            <p className='font-semibold'>Documento:</p>
+            <p className='ml-2 font-normal'>
+              {candidate.profile.identification}
+            </p>
+          </div>
+          <div className='flex'>
+            <p className='flex font-semibold'>Correo:</p>
             <p className='ml-2 font-normal'>{candidate.email}</p>
-          </p>
-          <p className='flex font-semibold'>
-            Teléfono:
-            <p className='ml-2 font-normal'>{candidate.phone}</p>
-          </p>
+          </div>
+          <div className='flex'>
+            <p className='flex font-semibold'>Teléfono:</p>
+            <p className='ml-2 font-normal'>{candidate.profile.phone}</p>
+          </div>
         </div>
       </div>
     </div>

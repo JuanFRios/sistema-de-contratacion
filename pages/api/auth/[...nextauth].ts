@@ -29,6 +29,7 @@ export default NextAuth({
       clientId: process.env.AUTH0_CLIENT_ID,
       clientSecret: process.env.AUTH0_CLIENT_SECRET,
       issuer: process.env.AUTH0_ISSUER,
+      authorization: `https://ingenieria-web-2022.us.auth0.com/authorize?response_type=code&prompt=login`,
     }),
   ],
 });

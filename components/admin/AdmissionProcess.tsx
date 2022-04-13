@@ -6,8 +6,7 @@ import Box from '@mui/material/Box';
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
-// import StepContent from '@mui/material/StepContent';
-import { Button } from '@mui/material';
+import { Tooltip, Button } from '@mui/material';
 import FileUpload from '@components/FileUpload';
 // import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
@@ -60,7 +59,7 @@ const AdmissionProcess = ({ closeDialog, admissionProcessId }) => {
           Proceso de admisión{' '}
           {admissionProcess.getAdmissionProcess.vacancy.position}
         </div>
-        <div className='h-full overflow-auto'>
+        <div className='h-full overflow-y-auto'>
           <BodyAdmissionProcess
             admissionProcess={admissionProcess.getAdmissionProcess}
           />
@@ -129,6 +128,7 @@ const BodyAdmissionProcess = ({ admissionProcess }) => {
       </>
     );
   }
+  console.log('first', admissionProcess);
 
   return (
     <Box sx={{ width: '100%' }}>
@@ -161,12 +161,15 @@ const BodyAdmissionProcess = ({ admissionProcess }) => {
       </Stepper>
       {activeStep === 0 && (
         <>
-          <div className='h-fit overflow-auto mt-4 mt-'>
-            <InterviewDeatail />
-            <InterviewDeatail />
-            <InterviewDeatail />
-            <InterviewDeatail />
-            <InterviewDeatail />
+          <div className='h-fit overflow-y-auto mt-4 mt-'>
+            {admissionProcess.interviews.length === 0 && (
+              <div>
+                <p>Aún no se le han realizado entrevistas al candidato</p>
+              </div>
+            )}
+            {admissionProcess.interviews.map((i) => (
+              <InterviewDeatail key={i.id} interview={i} />
+            ))}
           </div>
           <div className='pt-3'>
             <Box sx={{ display: 'contents', flexDirection: 'column' }}>
@@ -283,7 +286,13 @@ const DocumentInput = ({ document, admissionProcess, showInput }) => {
       <h6 className='mx-4 my-2'>
         {document.name} {document.signature ? '*' : ''}:
       </h6>
-      {uploaded.length > 0 && <div>Descargar</div>}
+      {uploaded.length > 0 && (
+        <Tooltip title='Descargar'>
+          <a href={uploaded[0].fileUrl} target='_blank' rel='noreferrer'>
+            <i className='fas fa-file text-2xl text-green-700 cursor-pointer' />
+          </a>
+        </Tooltip>
+      )}
       {showInput && (
         <div className=' bg-slate-400 hover:border-gray-400 border-2 mx-2 rounded-lg text-center cursor-pointer'>
           <FileUpload
@@ -300,11 +309,11 @@ const DocumentInput = ({ document, admissionProcess, showInput }) => {
   );
 };
 
-const InterviewDeatail = () => (
+const InterviewDeatail = ({ interview }) => (
   <div className='flex pb-4'>
     <div className='flex items-center'>
       <Image
-        src='https://res.cloudinary.com/proyecto-integrador-udea-2022/image/upload/v1647726660/Screenshot_from_2022-03-19_16-50-20_kqfsoy.png'
+        src={findImage(interview.interviewer)}
         alt='Perfil admin'
         height={60}
         width={60}
@@ -315,16 +324,11 @@ const InterviewDeatail = () => (
     <div className='flex flex-col items-start w-full pl-4'>
       <p>
         {' '}
-        <b>Juan Fernando Ríos</b> hizo un comentario en{' '}
-        <b>entrevista sicológica</b>
+        <b>{interview.interviewer.name}</b> hizo un comentario en{' '}
+        <b>{interview.name}</b>
       </p>
-      <div className='text-justify border-2 rounded-lg border-slate-500'>
-        <p className='p-1'>
-          El candidato es una persona tímida y poco expresiva El candidato es
-          una persona tímida y poco expresiva El candidato es una persona tímida
-          y poco expresiva El candidato es una persona tímida y poco expresiva
-          El candidato es una persona tímida y poco expresiva{' '}
-        </p>
+      <div className='text-justify border-2 rounded-lg border-slate-500 w-full'>
+        <p className='p-1'>{interview.notes}</p>
       </div>
     </div>
   </div>

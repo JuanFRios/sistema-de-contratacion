@@ -9,10 +9,13 @@ import { nanoid } from 'nanoid';
 import React from 'react';
 import { toast } from 'react-toastify';
 import LoadingComponent from '@components/utils/LoadingComponent';
+import { GET_CANDIDATES } from 'graphql/queries/user';
 
 const CreateCandidateDialog = ({ closeDialog, token }) => {
   const { form, formData, updateFormData } = useFormData(null);
-  const [createUser, { loading }] = useMutation(CREATE_USER_ACCOUNT);
+  const [createUser, { loading }] = useMutation(CREATE_USER_ACCOUNT, {
+    refetchQueries: [GET_CANDIDATES],
+  });
   const { data: vacancies, loading: loadingVacancies } = useQuery(
     GET_SIMPLE_VACANCIES,
     {
@@ -56,6 +59,7 @@ const CreateCandidateDialog = ({ closeDialog, token }) => {
       toast.success(`Usuario creado correctamente con la clave ${password}*`, {
         autoClose: false,
       });
+      console.log(`${password}*`);
       closeDialog();
     } catch (error) {
       toast.error('Error creando el usuario');
@@ -125,10 +129,12 @@ const CreateCandidateDialog = ({ closeDialog, token }) => {
         />
         <label htmlFor='vacancyId' className='my-2'>
           <span className='font-bold mx-2'>Vacante:</span>
-          <select name='vacancyId' required>
-            <option disabled selected>
-              Seleccione una vacante
-            </option>
+          <select
+            name='vacancyId'
+            defaultValue='Seleccione una vacante'
+            required
+          >
+            <option disabled>Seleccione una vacante</option>
             {vacancies.getVacancies.map((v) => (
               <option value={v.id} key={v.id}>
                 {v.position}

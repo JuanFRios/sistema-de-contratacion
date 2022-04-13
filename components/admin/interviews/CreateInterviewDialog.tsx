@@ -9,10 +9,13 @@ import { toast } from 'react-toastify';
 import LoadingComponent from '@components/utils/LoadingComponent';
 import { AdmissionStatus } from 'utils/admissionProcess';
 import moment from 'moment';
+import { GET_INTERVIEWS } from 'graphql/queries/interviews';
 
 const CreateInterviewDialog = ({ closeDialog, interviwerId }) => {
   const { form, formData, updateFormData } = useFormData(null);
-  const [createUser, { loading }] = useMutation(CREATE_INTERVIEW);
+  const [createUser, { loading }] = useMutation(CREATE_INTERVIEW, {
+    refetchQueries: [GET_INTERVIEWS],
+  });
   const { data: vacancies, loading: loadingVacancies } = useQuery(
     GET_SIMPLE_ADMISSIONPROCESESS,
     {
@@ -102,11 +105,10 @@ const CreateInterviewDialog = ({ closeDialog, interviwerId }) => {
           <select
             name='admissionProcessId'
             required
+            defaultValue='Seleccione un candidato'
             className='py-1.5 px-0 bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block'
           >
-            <option disabled selected>
-              Seleccione un candidato
-            </option>
+            <option disabled>Seleccione un candidato</option>
             {admissionProcess.map((a) => (
               <option value={a.id} key={a.id}>
                 {a.candidate.name}
