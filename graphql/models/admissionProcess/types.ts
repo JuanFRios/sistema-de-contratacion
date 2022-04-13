@@ -41,7 +41,10 @@ const AdmissionProcessTypes = gql`
 
   type Mutation {
     createAdmissionProcess(data: AdmissionProcessCreateInput!): AdmissionProcess
-    changeStatusAdmissionProcess(where: AdmissionProcessFilterId!, data: AdmissionProcessChangeStatusInput!): AdmissionProcess
+    changeStatusAdmissionProcess(
+      where: AdmissionProcessFilterId!
+      data: AdmissionProcessChangeStatusInput!
+    ): AdmissionProcess
   }
 `;
 

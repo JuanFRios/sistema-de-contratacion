@@ -9,10 +9,14 @@ import { toast } from 'react-toastify';
 import LoadingComponent from '@components/utils/LoadingComponent';
 import { AdmissionStatus } from 'utils/admissionProcess';
 import moment from 'moment';
+import { Button } from '@mui/material';
+import { GET_INTERVIEWS } from 'graphql/queries/interviews';
 
 const CreateInterviewDialog = ({ closeDialog, interviwerId }) => {
   const { form, formData, updateFormData } = useFormData(null);
-  const [createUser, { loading }] = useMutation(CREATE_INTERVIEW);
+  const [createUser, { loading }] = useMutation(CREATE_INTERVIEW, {
+    refetchQueries: [GET_INTERVIEWS],
+  });
   const { data: vacancies, loading: loadingVacancies } = useQuery(
     GET_SIMPLE_ADMISSIONPROCESESS,
     {
@@ -35,12 +39,10 @@ const CreateInterviewDialog = ({ closeDialog, interviwerId }) => {
           },
         },
       });
-      toast.success(`Usuario creado correctamente con la clave `, {
-        autoClose: false,
-      });
+      toast.success(`La entrevista se creó correctamente`);
       closeDialog();
     } catch (error) {
-      toast.error('Error creando el usuario');
+      toast.error('Error creando la entrevista');
       closeDialog();
     }
   };
@@ -52,7 +54,6 @@ const CreateInterviewDialog = ({ closeDialog, interviwerId }) => {
   const admissionProcess = [];
   vacancies.getVacancies.forEach((v) =>
     v.admissionProcesess.forEach((a) => {
-      console.log(a);
       if (a.status === AdmissionStatus.FASE_ENTREVISTAS) {
         admissionProcess.push(a);
       }
@@ -91,7 +92,7 @@ const CreateInterviewDialog = ({ closeDialog, interviwerId }) => {
         <Input
           name='date'
           type='datetime-local'
-          min={moment().format()}
+          min={moment().format('YYYY-MM-DDThh:mm')}
           max=''
           placeholder='Fecha de la entrevista'
           text='Fecha y hora'
@@ -114,7 +115,10 @@ const CreateInterviewDialog = ({ closeDialog, interviwerId }) => {
             ))}
           </select>
         </label>
-        <div className='w-full flex justify-center pt-3'>
+        <div className='w-full flex justify-between pt-5'>
+          <Button variant='contained' type='button' onClick={closeDialog}>
+            Cerrar
+          </Button>
           <ButtonLoading isSubmit text='Crear entrevista' loading={loading} />
         </div>
       </form>

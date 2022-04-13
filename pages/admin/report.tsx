@@ -23,10 +23,10 @@ const Report = () => {
   const { data, loading } = useQuery(GET_CHART_DATA);
 
   const [options, setOptions] = useState({
-    chart: {
-    },
+    chart: {},
     plotOptions: {
       bar: {
+        distributed: true,
         borderRadius: 4,
         horizontal: true,
       },
@@ -49,8 +49,8 @@ const Report = () => {
         xaxis: { ...options.xaxis, categories: data.getChartData.categories },
       });
     }
-  }, [data, options]);
-
+    console.log(data);
+  }, [data]);
   if (loading) return <LoadingComponent />;
 
   return (
@@ -69,5 +69,4 @@ const Report = () => {
     </div>
   );
 };
-
 export default Report;

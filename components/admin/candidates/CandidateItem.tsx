@@ -6,7 +6,6 @@ const CandidateItem = ({ candidate }) => (
     <div className='flex p-4'>
       <div
         className='border-2 border-inherit rounded-lg bg-slate-50 drop-shadow-lg text-slate-900 p-2
-        hover:cursor-pointer hover:bg-slate-200
         w-96 h-44'
       >
         <div className='p-1 overflow-auto'>
@@ -25,7 +24,9 @@ const CandidateItem = ({ candidate }) => (
           </div>
           <p className='flex font-semibold'>
             Documento:
-            <p className='ml-2 font-normal'>{candidate.identification}</p>
+            <p className='ml-2 font-normal'>
+              {candidate.profile.identification}
+            </p>
           </p>
           <p className='flex font-semibold'>
             Correo:
@@ -33,7 +34,7 @@ const CandidateItem = ({ candidate }) => (
           </p>
           <p className='flex font-semibold'>
             Teléfono:
-            <p className='ml-2 font-normal'>{candidate.phone}</p>
+            <p className='ml-2 font-normal'>{candidate.profile.phone}</p>
           </p>
         </div>
       </div>
