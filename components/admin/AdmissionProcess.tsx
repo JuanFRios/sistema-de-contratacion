@@ -353,7 +353,7 @@ const DocumentInput = ({ document, admissionProcess, showInput }) => {
       {uploaded.length > 0 && (
         <Tooltip title='Descargar'>
           <a href={uploaded[0].fileUrl} target='_blank' rel='noreferrer'>
-            <i className='fas fa-file text-2xl text-green-700 cursor-pointer' />
+            <i className='fas fa-download text-2xl text-green-700 cursor-pointer' />
           </a>
         </Tooltip>
       )}

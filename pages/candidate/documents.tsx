@@ -85,47 +85,6 @@ const Documents = () => {
             ))}
           </div>
         </div>
-        <div className='flex flex-col m-4 '>
-          <h1>ARCHIVOS QUE DEBES CARGAR: </h1>
-          <div className='flex flex-col'>
-            <div className='flex font-bold'>
-              {data.getUploadedDocuments.map((document) => (
-                <UploadedDocument
-                  key={document.id}
-                  document={document}
-                  button={false}
-                />
-              ))}
-            </div>
-          </div>
-        </div>
-        <div className='flex flex-col m-4 mx-4 '>
-          <h6 className=''>ARCHIVOS CARGADOS POR JOINUS: </h6>
-          <div className='flex mx-8 my-4 '>
-            <h6 className='font-bold m-2 '>Contrato:</h6>
-            <Tooltip title='Download Document'>
-              <a href='/admin/candidates' target='_blank' rel='noreferrer'>
-                <div className='flex bg-slate-400 border-2 rounded-lg mx-4 text-center hover:border-gray-400'>
-                  <h6 className='m-2'>Descargar</h6>
-                  <i className='fa-solid fa-download text-2xl text-slate-800 mx-4 cursor-pointer' />
-                </div>
-              </a>
-            </Tooltip>
-          </div>
-          <div className='flex mx-12 my-4'>
-            <h6 className='font-bold mx-4 my-2'>Contrato firmado:</h6>
-            <div className='bg-slate-400 hover:border-gray-400 border-2 rounded-lg text-center cursor-pointer'>
-              <FileUpload
-                folder='documents'
-                text='Elegir'
-                resourceType='raw'
-                successCallback={successCallback}
-                errorCallback={errorCallback}
-              />
-              <i className='fa-solid fa-file-arrow-up text-2xl text-slate-800 mx-4 ' />
-            </div>
-          </div>
-        </div>
       </form>
     </div>
   );
