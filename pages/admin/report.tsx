@@ -1,18 +1,17 @@
-import React from 'react';
-// import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { matchRoles } from 'utils/matchRoles';
-// import dynamic from 'next/dynamic';
-// import { useQuery } from '@apollo/client';
-// import { GET_CHART_DATA } from 'graphql/queries/chart';
-// import LoadingComponent from '@components/utils/LoadingComponent';
+import dynamic from 'next/dynamic';
+import { useQuery } from '@apollo/client';
+import { GET_CHART_DATA } from 'graphql/queries/chart';
+import LoadingComponent from '@components/utils/LoadingComponent';
 
-// const ReactApexChart = dynamic(
-//   // eslint-disable-next-line arrow-body-style
-//   () => {
-//     return import('react-apexcharts');
-//   },
-//   { ssr: false }
-// );
+const ReactApexChart = dynamic(
+  // eslint-disable-next-line arrow-body-style
+  () => {
+    return import('react-apexcharts');
+  },
+  { ssr: false }
+);
 
 export async function getServerSideProps(context) {
   return {
@@ -20,60 +19,54 @@ export async function getServerSideProps(context) {
   };
 }
 
-const Report = () => (
-  // const { data, loading } = useQuery(GET_CHART_DATA);
+const Report = () => {
+  const { data, loading } = useQuery(GET_CHART_DATA);
 
-  // const [options, setOptions] = useState({
-  //   chart: {},
-  //   plotOptions: {
-  //     bar: {
-  //       distributed: true,
-  //       borderRadius: 4,
-  //       horizontal: true,
-  //     },
-  //   },
-  //   dataLabels: {
-  //     enabled: false,
-  //   },
-  //   xaxis: {
-  //     categories: [],
-  //   },
-  //   title: {
-  //     align: 'left',
-  //   },
-  // });
+  const [options, setOptions] = useState({
+    chart: {},
+    plotOptions: {
+      bar: {
+        distributed: true,
+        borderRadius: 4,
+        horizontal: true,
+      },
+    },
+    dataLabels: {
+      enabled: false,
+    },
+    xaxis: {
+      categories: [],
+    },
+  });
 
-  // const [series, setSeries] = useState([]);
+  const [series, setSeries] = useState([]);
 
-  // useEffect(() => {
-  //   if (data) {
-  //     setSeries(data.getChartData.series);
-  //     setOptions({
-  //       ...options,
-  //       xaxis: { ...options.xaxis, categories: data.getChartData.categories },
-  //     });
-  //   }
-  //   console.log(data);
-  // }, [data]);
-  // if (loading) return <LoadingComponent />;
+  useEffect(() => {
+    if (data) {
+      setSeries(data.getChartData.series);
+      setOptions({
+        ...options,
+        xaxis: { ...options.xaxis, categories: data.getChartData.categories },
+      });
+    }
+    console.log(data);
+  }, [data]);
+  if (loading) return <LoadingComponent />;
 
-  <div className='place-content-center'>
-    <div className='flex justify-center pt-12 pb-6 font-bold text-4xl'>
-      <p>
-        La gráfica funciona en local pero al desplegar falla la compilación.
-      </p>
+  return (
+    <div className='place-content-center'>
+      <h1 className='text-3xl text-slate-900 font-bold text-center m-4'>
+        Cantidad de documentos pendientes por cada proceso de contratación
+      </h1>
+      <div className='w-11/12'>
+        <ReactApexChart
+          options={options}
+          series={series}
+          type='bar'
+          height={350}
+        />
+      </div>
     </div>
-    {/* <div className='flex justify-center pt-12 pb-6 font-bold text-4xl'>
-      <p>Cantidad de documentos pendientes por cada proceso de contratación</p>
-    </div> */}
-    {/* <div className='w-11/12'>
-      <ReactApexChart
-        options={options}
-        series={series}
-        type='bar'
-        height={350}
-      />
-    </div> */}
-  </div>
-);
+  );
+};
 export default Report;

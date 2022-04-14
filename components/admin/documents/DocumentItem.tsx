@@ -21,7 +21,7 @@ const DocumentItem = ({ document }) => {
     case true:
       classNameSignature =
         'text-sm text-teal-800 font-mono bg-teal-100 rounded-full px-2 flex items-center';
-      spanSignature = 'Si';
+      spanSignature = 'Sí';
       break;
     default:
       classNameSignature =

@@ -5,6 +5,8 @@ import prisma from 'config/prisma';
 const AdmissionProcessResolvers = {
   AdmissionProcess: {
     candidate: async (parent, args) => {
+      console.log('parent.candidateId', parent.candidateId);
+      
       return await prisma.user.findUnique({
         where: {
           id: parent.candidateId,
